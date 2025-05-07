@@ -1,98 +1,197 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# AuthGuard - Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Sistema de gerenciamento de autenticação e autorização com foco em permissões granulares para aplicações empresariais.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Visão Geral
 
-## Description
+Esta API fornece uma solução completa para gerenciamento de usuários, roles e permissões em um ambiente empresarial. Construída com NestJS, TypeScript, Prisma e PostgreSQL, seguindo os princípios de arquitetura limpa e padrões SOLID.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Tecnologias Utilizadas
 
-## Project setup
+- Node.js (v18+)
+- NestJS
+- TypeScript
+- PostgreSQL
+- Prisma ORM
+- Docker & Docker Compose
+- Jest para testes
+- JWT para autenticação
 
-```bash
-$ npm install
+## Checkpoints de Desenvolvimento
+
+### Checkpoint 1: Setup Inicial
+
+- [ ] Inicializar projeto NestJS com TypeScript
+- [ ] Configurar ESLint, Prettier e Git Hooks
+- [ ] Estruturar pastas seguindo arquitetura limpa
+- [ ] Configurar Docker e Docker Compose para desenvolvimento
+- [ ] Conectar Prisma ao PostgreSQL
+
+### Checkpoint 2: Configuração do Banco de Dados
+
+- [ ] Definir esquemas Prisma para entidades base
+- [ ] Criar migrações iniciais
+- [ ] Implementar seeds para dados iniciais
+- [ ] Configurar ambiente de teste com banco separado
+
+### Checkpoint 3: Módulo de Usuários
+
+- [ ] Implementar registro de usuários
+- [ ] Criar sistema de login com JWT
+- [ ] Implementar refresh tokens
+- [ ] Adicionar recuperação de senha
+- [ ] Implementar gerenciamento de sessões ativas
+
+### Checkpoint 4: Módulo de Roles
+
+- [ ] Implementar CRUD completo para roles
+- [ ] Criar sistema de hierarquia de roles
+- [ ] Implementar atribuição de roles a usuários
+- [ ] Adicionar validações de roles em endpoints
+
+### Checkpoint 5: Módulo de Permissões
+
+- [ ] Implementar CRUD para permissões
+- [ ] Criar sistema de atribuição de permissões a roles
+- [ ] Implementar permissões específicas por usuário
+- [ ] Desenvolver middleware de verificação de permissões
+- [ ] Implementar caching de permissões com Redis
+
+### Checkpoint 6: Módulos de Demonstração
+
+- [ ] Criar módulo de "Recursos" com CRUD completo
+- [ ] Implementar módulo de "Projetos" com CRUD
+- [ ] Aplicar verificações de permissão em operações
+- [ ] Criar relacionamentos entre entidades
+
+### Checkpoint 7: Sistemas de Logs e Auditoria
+
+- [ ] Implementar logs detalhados de atividades
+- [ ] Criar endpoint para consulta de logs
+- [ ] Adicionar sistema de filtragem e busca em logs
+- [ ] Implementar exportação de logs
+
+### Checkpoint 8: Otimização e Segurança
+
+- [ ] Implementar rate limiting
+- [ ] Adicionar validação e sanitização de inputs
+- [ ] Configurar headers de segurança
+- [ ] Otimizar queries do banco de dados
+- [ ] Implementar testes automatizados
+
+### Checkpoint 9: Documentação
+
+- [ ] Configurar Swagger para documentação da API
+- [ ] Documentar todas as rotas e payloads
+- [ ] Criar descrições para todas as entidades
+- [ ] Documentar fluxos de autenticação e autorização
+
+### Checkpoint 10: Deploy
+
+- [ ] Configurar variáveis de ambiente para produção
+- [ ] Criar scripts de migração para produção
+- [ ] Configurar Docker para ambiente de produção
+- [ ] Implementar pipeline CI/CD
+
+## Estrutura de Diretórios
+
+```
+src/
+├── config/               # Configurações do app
+├── modules/              # Módulos principais
+│   ├── auth/             # Autenticação
+│   ├── users/            # Usuários
+│   ├── roles/            # Funções
+│   ├── permissions/      # Permissões
+│   ├── resources/        # Recursos (demonstração)
+│   └── projects/         # Projetos (demonstração)
+├── shared/               # Código compartilhado
+│   ├── decorators/       # Decorators personalizados
+│   ├── guards/           # Guards de autenticação/autorização
+│   ├── interceptors/     # Interceptors
+│   ├── filters/          # Filtros de exceção
+│   ├── pipes/            # Pipes de validação
+│   └── utils/            # Utilitários
+└── main.ts               # Ponto de entrada
 ```
 
-## Compile and run the project
+## Comandos Principais
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
+# Desenvolvimento
 $ npm run start:dev
 
-# production mode
-$ npm run start:prod
-```
-
-## Run tests
-
-```bash
-# unit tests
+# Testes unitários
 $ npm run test
 
-# e2e tests
+# Testes e2e
 $ npm run test:e2e
 
-# test coverage
-$ npm run test:cov
+# Build para produção
+$ npm run build
+
+# Executar em produção
+$ npm run start:prod
+
+# Executar migrações do Prisma
+$ npx prisma migrate dev
+
+# Gerar client do Prisma
+$ npx prisma generate
 ```
 
-## Deployment
+## API Endpoints
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+### Autenticação
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+- `POST /auth/register` - Registro de novo usuário
+- `POST /auth/login` - Login de usuário
+- `POST /auth/refresh-token` - Atualizar token de acesso
+- `POST /auth/forgot-password` - Solicitar redefinição de senha
+- `POST /auth/reset-password` - Redefinir senha
+- `GET /auth/sessions` - Listar sessões ativas
+- `DELETE /auth/sessions/:id` - Encerrar sessão específica
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+### Usuários
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+- `GET /users` - Listar usuários
+- `GET /users/:id` - Obter usuário específico
+- `PATCH /users/:id` - Atualizar usuário
+- `DELETE /users/:id` - Desativar usuário
+- `GET /users/:id/roles` - Listar roles do usuário
+- `GET /users/:id/permissions` - Listar permissões do usuário
 
-## Resources
+### Roles
 
-Check out a few resources that may come in handy when working with NestJS:
+- `GET /roles` - Listar roles
+- `POST /roles` - Criar nova role
+- `GET /roles/:id` - Obter role específica
+- `PATCH /roles/:id` - Atualizar role
+- `DELETE /roles/:id` - Remover role
+- `POST /roles/:id/permissions` - Atribuir permissão a role
+- `DELETE /roles/:id/permissions/:permissionId` - Remover permissão de role
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### Permissões
 
-## Support
+- `GET /permissions` - Listar permissões
+- `POST /permissions` - Criar nova permissão
+- `GET /permissions/:id` - Obter permissão específica
+- `PATCH /permissions/:id` - Atualizar permissão
+- `DELETE /permissions/:id` - Remover permissão
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Recursos (demonstração)
 
-## Stay in touch
+- `GET /resources` - Listar recursos
+- `POST /resources` - Criar novo recurso
+- `GET /resources/:id` - Obter recurso específico
+- `PATCH /resources/:id` - Atualizar recurso
+- `DELETE /resources/:id` - Remover recurso
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Próximos Passos
 
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+1. Clone o repositório
+2. Execute `npm install` para instalar dependências
+3. Configure o arquivo `.env` baseado no `.env.example`
+4. Execute `docker-compose up -d` para iniciar o banco de dados
+5. Execute `npx prisma migrate dev` para aplicar migrações
+6. Execute `npm run start:dev` para iniciar o servidor de desenvolvimento
