@@ -21,8 +21,10 @@ Esta API fornece uma solução completa para gerenciamento de usuários, roles e
 
 ### Checkpoint 1: Setup Inicial
 
-- [ ] Inicializar projeto NestJS com TypeScript
-- [ ] Configurar ESLint, Prettier e Git Hooks
+- [x] Inicializar projeto NestJS com TypeScript
+- [x] Configurar ESLint, Prettier
+- [ ] Configurar Husky
+- [ ] Configurar Git actions
 - [ ] Estruturar pastas seguindo arquitetura limpa
 - [ ] Configurar Docker e Docker Compose para desenvolvimento
 - [ ] Conectar Prisma ao PostgreSQL
