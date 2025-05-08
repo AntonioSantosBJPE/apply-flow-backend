@@ -1,0 +1,13 @@
+node_modules
+dist
+coverage
+.vscode
+.github
+.husky
+data
+public
+*.md
+*.lock
+package-lock.json
+yarn.lock
+pnpm-lock.yaml 
