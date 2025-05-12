@@ -26,10 +26,11 @@ Esta API fornece uma solução completa para gerenciamento de usuários, roles e
 - [x] Adicionar regras do cursor ao projeto
 - [x] Estruturar pastas seguindo arquitetura limpa
 - [x] Configurar Docker e Docker Compose para desenvolvimento
-- [ ] Conectar Prisma ao PostgreSQL
+
 
 ### Checkpoint 2: Configuração do Banco de Dados
 
+- [ ] Conectar Prisma ao PostgreSQL
 - [ ] Definir esquemas Prisma para entidades base
 - [ ] Criar migrações iniciais
 - [ ] Implementar seeds para dados iniciais
@@ -37,6 +38,7 @@ Esta API fornece uma solução completa para gerenciamento de usuários, roles e
 
 ### Checkpoint 3: Módulo de Usuários
 
+- [ ] Implementar Swagger
 - [ ] Implementar registro de usuários
 - [ ] Criar sistema de login com JWT
 - [ ] Implementar refresh tokens
@@ -74,6 +76,7 @@ Esta API fornece uma solução completa para gerenciamento de usuários, roles e
 
 ### Checkpoint 8: Otimização e Segurança
 
+- [ ] Adicionar CORS
 - [ ] Implementar rate limiting
 - [ ] Adicionar validação e sanitização de inputs
 - [ ] Configurar headers de segurança
