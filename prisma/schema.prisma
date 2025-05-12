@@ -13,3 +13,179 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id                String    @id @default(uuid()) @db.Uuid
+  email             String    @unique
+  password_hash     String    @db.VarChar(255)
+  first_name        String    @db.VarChar(255)
+  last_name         String    @db.VarChar(255)
+  department        String    @db.VarChar(255)
+  position          String    @db.VarChar(255)
+  is_active         Boolean   @default(true)
+  is_email_verified Boolean   @default(false)
+  last_login        DateTime?
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
+
+  // Relations
+  user_roles       UserRole[]
+  user_permissions UserPermission[]
+  refresh_tokens   RefreshToken[]
+  audit_logs       AuditLog[]
+  owned_resources  Resource[]
+  owned_projects   Project[]
+
+  @@map("users")
+}
+
+model Role {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String   @unique
+  description String
+  priority    Int
+  is_default  Boolean  @default(false)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  // Relations
+  user_roles       UserRole[]
+  role_permissions RolePermission[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id          String   @id @default(uuid()) @db.Uuid
+  action      String
+  resource    String
+  description String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  // Relations
+  user_permissions UserPermission[]
+  role_permissions RolePermission[]
+
+  @@unique([action, resource])
+  @@map("permissions")
+}
+
+model UserRole {
+  id          String   @id @default(uuid()) @db.Uuid
+  user_id     String   @db.Uuid
+  role_id     String   @db.Uuid
+  assigned_at DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [role_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, role_id])
+  @@map("user_roles")
+}
+
+model UserPermission {
+  id            String   @id @default(uuid()) @db.Uuid
+  user_id       String   @db.Uuid
+  permission_id String   @db.Uuid
+  is_allowed    Boolean  @default(true)
+  assigned_at   DateTime @default(now())
+
+  // Relations
+  user       User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permission_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, permission_id])
+  @@map("user_permissions")
+}
+
+model RolePermission {
+  id            String   @id @default(uuid()) @db.Uuid
+  role_id       String   @db.Uuid
+  permission_id String   @db.Uuid
+  assigned_at   DateTime @default(now())
+
+  // Relations
+  role       Role       @relation(fields: [role_id], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permission_id], references: [id], onDelete: Cascade)
+
+  @@unique([role_id, permission_id])
+  @@map("role_permissions")
+}
+
+model RefreshToken {
+  id          String   @id @default(uuid()) @db.Uuid
+  user_id     String   @db.Uuid
+  token       String   @unique
+  device_info String?
+  ip_address  String?
+  expires_at  DateTime
+  created_at  DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("refresh_tokens")
+}
+
+model AuditLog {
+  id          String   @id @default(uuid()) @db.Uuid
+  user_id     String   @db.Uuid
+  action      String
+  resource    String
+  resource_id String?
+  details     String?
+  ip_address  String?
+  created_at  DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [user_id], references: [id])
+
+  @@map("audit_logs")
+}
+
+model Resource {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String
+  description String?
+  owner_id    String   @db.Uuid
+  is_public   Boolean  @default(false)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  // Relations
+  owner             User              @relation(fields: [owner_id], references: [id])
+  project_resources ProjectResource[]
+
+  @@map("resources")
+}
+
+model Project {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String
+  description String?
+  owner_id    String   @db.Uuid
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  // Relations
+  owner             User              @relation(fields: [owner_id], references: [id])
+  project_resources ProjectResource[]
+
+  @@map("projects")
+}
+
+model ProjectResource {
+  id          String   @id @default(uuid()) @db.Uuid
+  project_id  String   @db.Uuid
+  resource_id String   @db.Uuid
+  assigned_at DateTime @default(now())
+
+  // Relations
+  project  Project  @relation(fields: [project_id], references: [id], onDelete: Cascade)
+  resource Resource @relation(fields: [resource_id], references: [id], onDelete: Cascade)
+
+  @@unique([project_id, resource_id])
+  @@map("project_resources")
+}
