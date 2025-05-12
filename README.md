@@ -23,7 +23,7 @@ Esta API fornece uma solução completa para gerenciamento de usuários, roles e
 
 - [x] Inicializar projeto NestJS com TypeScript
 - [x] Configurar ESLint, Prettier
-- [ ] Adicionar regras do cursor ao projeto
+- [x] Adicionar regras do cursor ao projeto
 - [ ] Estruturar pastas seguindo arquitetura limpa
 - [ ] Configurar Docker e Docker Compose para desenvolvimento
 - [ ] Conectar Prisma ao PostgreSQL
