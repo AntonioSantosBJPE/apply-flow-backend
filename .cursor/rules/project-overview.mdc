@@ -1,0 +1,38 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Project Overview
+
+This is AuthGuard Backend, a NestJS application using a domain-driven design architecture. The application serves as a backend service with several domain modules and infrastructure components.
+
+## Main Entry Point
+
+The application's entry point is [infra/main.ts](mdc:src/infra/main.ts), which bootstraps the NestJS application.
+
+## Core Dependencies
+
+- **NestJS**: Framework for building server-side applications
+- **Prisma**: ORM for database interactions
+- **TypeScript**: Programming language
+- **BullMQ**: Queue management system
+- **Passport/JWT**: Authentication strategy
+- **Zod**: Schema validation
+- **AWS SDK**: AWS service integrations including S3 and SES
+
+## Domain Modules
+
+Key domain modules include:
+- Auth
+
+## Infrastructure Components
+
+The project includes several infrastructure components:
+- Database connections
+- HTTP controllers
+- Middleware
+- Exception filters
+- Queue handling
+- Email services
+- File storage integrations

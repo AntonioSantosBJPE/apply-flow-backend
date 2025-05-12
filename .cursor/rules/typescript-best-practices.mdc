@@ -1,0 +1,81 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# TypeScript Best Practices
+
+This project follows strict TypeScript practices to ensure type safety and maintainability.
+
+## Type Definitions
+
+- Place type definitions in appropriate directories:
+  - Global types: `src/@types/`
+  - Domain-specific types: `src/domain/types/` or within domain modules
+  - Core types: `src/core/types/`
+
+## Interface Usage
+
+- Prefer interfaces over types for object shapes
+- Use interfaces for service contracts and repositories
+- Extend interfaces rather than duplicating similar structures
+
+## Constants Implementation
+
+- Group related constants in dedicated files in `src/core/constants/`
+- Export constants as frozen objects using 'as const' for type safety:
+```typescript
+export const USER_ROLES_ENUM = Object.freeze({
+  ADMIN: 'admin',
+  USER: 'user',
+  GUEST: 'guest',
+} as const);
+
+export type USER_ROLES_ENUM = typeof USER_ROLES_ENUM[keyof typeof USER_ROLES_ENUM];
+```
+
+## NestJS Dependency Injection
+
+- Use constructor injection for dependencies
+- Declare services as `@Injectable()`
+- Implement interfaces for better testing and separation
+
+## DTOs and Validation
+
+- Use class-validator and class-transformer for DTO validation
+- Define clear input/output DTOs for use cases
+- Use Zod for schema validation where appropriate
+
+## Error Handling
+
+- Use Either pattern with Left for errors and Right for success
+- Define specific error types for different scenarios
+- Avoid throwing exceptions in domain code
+
+## Pagination Type Usage
+
+- The `Pagination<T>` type is defined globally in `src/domain/types/pagination.d.ts`
+- DO NOT import the Pagination type in repository interfaces or use cases
+- When returning paginated data in use cases, return the full pagination object:
+```typescript
+type SomeUseCaseResponse = Either<
+  null,
+  {
+    items: Pagination<SomeEntity> // Return the entire pagination object
+  }
+>
+```
+- In repository methods, return the complete pagination structure
+- For repository implementations, use the `createPaginator` function from `prisma-pagination`
+
+## Generics
+
+- Use generics for reusable components
+- Type repository methods appropriately
+- Ensure generic constraints when needed
+
+## Strict Type Checking
+
+- Avoid using `any` type
+- Use proper type narrowing with type guards
+- Leverage union types for values with multiple possible types

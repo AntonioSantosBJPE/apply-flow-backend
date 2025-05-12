@@ -1,0 +1,56 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Use Case Pattern
+
+The project follows a use case-centric approach for organizing business logic, with each use case representing a specific application functionality.
+
+## Use Case Structure
+
+Each use case follows this structure:
+- A single public `execute` method that implements the use case logic
+- Input parameters defined as a DTO or interface
+- Returns an Either type with error on Left and success on Right
+- Follows single responsibility principle
+
+Example use case [create-public-token.ts](mdc:src/domain/auth/application/use-cases/create-public-token.ts)
+
+## Dependencies
+
+- Dependencies are injected via constructor
+- Primarily depends on repositories and domain services
+- May use other use cases for composition
+- Dependencies should be interfaces, not concrete implementations
+
+## Error Handling
+
+- Use cases return Either<Error, Result> rather than throwing exceptions
+- Domain errors are returned as values on the Left side
+- Success results are returned on the Right side
+- Controllers/handlers map these errors to appropriate responses
+
+## Input Validation
+
+- Input validation is typically done at the controller/HTTP layer
+- Use cases can perform additional domain validation
+- Business rule validation belongs in the use case or domain entities
+
+## Use Case Composition
+
+- Complex operations may be composed of multiple use cases
+- Composition should be explicit and clear
+- Avoid deep nesting of use cases
+
+## Testing
+
+- Use cases should be thoroughly tested
+- Mock dependencies for unit testing
+- Test both success and failure paths
+
+## Naming Conventions
+
+- Use case files are named using kebab-case, descriptive of the action
+- Use case classes are named in PascalCase, typically with pattern `[Action][Entity]UseCase`
+- Example: `CreateUserUseCase` in file `create-user.ts`

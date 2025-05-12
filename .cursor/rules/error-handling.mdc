@@ -1,0 +1,53 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Error Handling
+
+The project follows a consistent approach to error handling to ensure robust and maintainable code.
+
+## Either Pattern
+
+The foundation of error handling is the Either pattern:
+- Defined in [core/either.ts](mdc:src/core/either.ts)
+- Represents success (Right) or failure (Left)
+- Returns errors as values rather than throwing exceptions
+- Used in domain and application layers
+
+## Error Types
+
+- Error types are defined in dedicated type definition files
+- Global error types are in `src/@types/errors.d.ts`
+- Domain-specific error types are in their respective domain modules
+
+## Error Responses
+
+- HTTP error responses are standardized using exception filters:
+  - [infra/all-exception.filter.ts](mdc:src/infra/all-exception.filter.ts)
+  - [infra/http-exception.filter.ts](mdc:src/infra/http-exception.filter.ts)
+  - [infra/prisma-exception.filter.ts](mdc:src/infra/prisma-exception.filter.ts)
+
+## Exception Hierarchy
+
+- Use specific exception types for different error scenarios
+- Extend from NestJS's HttpException or create custom exceptions
+- Map domain errors to appropriate HTTP responses
+
+## Error Codes
+
+- Use enum-based error codes for standardization
+- Group related error codes in dedicated constant files
+- Include error codes in error responses for client handling
+
+## Error Handling in Use Cases
+
+- Use cases return Either<Error, Result>
+- Controllers handle the Either result and map to HTTP responses
+- Infrastructure errors are caught and converted to domain errors where appropriate
+
+## Validation Errors
+
+- Use class-validator for DTO validation
+- Map validation errors to standardized error responses
+- Use Zod for schema validation with detailed error messages

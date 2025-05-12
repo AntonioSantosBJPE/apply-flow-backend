@@ -1,0 +1,54 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Naming Conventions
+
+The project follows specific naming conventions to maintain consistency across the codebase.
+
+## Directory Naming
+
+- Use lowercase with dashes for directories (e.g., `client-user/`)
+- Domain modules are named using single words (e.g., `auth/`, `user/`)
+- Multi-word domain modules use dashed notation (e.g., `log-error/`, `client-user/`)
+
+## File Naming
+
+- Use kebab-case for files (lowercase with dashes)
+- NestJS modules: `[name].module.ts`
+- Controllers: `[name].controller.ts`
+- Services: `[name].service.ts`
+- Repositories: `[name].repository.ts`
+- DTOs: `[name].dto.ts`
+- Entities: `[name].entity.ts`
+- Use cases: `[use-case-name].ts`
+
+## Class Naming
+
+- Use PascalCase for all classes
+- Append the purpose to the class name:
+  - `UserController`
+  - `AuthService`
+  - `TaskRepository`
+  - `CreateTaskUseCase`
+  - `UserEntity`
+
+## Interface Naming
+
+- Use PascalCase for interfaces
+- No 'I' prefix for interfaces
+- Example: `UserRepository` instead of `IUserRepository`
+
+## Constants Naming
+
+- Use SCREAMING_CASE for constant/enum names
+- Add _ENUM suffix to constant/enum type names
+- Group related constants in const objects with 'as const' assertion
+- Example: `USER_ROLES_ENUM`, `ERROR_CODES_ENUM`
+
+## Variable and Function Naming
+
+- Use camelCase for variables and function names
+- Use descriptive names that indicate purpose
+- Boolean variables should use prefixes like 'is', 'has', 'should'

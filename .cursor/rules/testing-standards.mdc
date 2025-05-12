@@ -1,0 +1,64 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Testing Standards
+
+The project uses Vitest for unit and integration testing with specific patterns to ensure code quality.
+
+## Testing Framework
+
+- Vitest is used as the testing framework
+- Configuration files:
+  - Unit tests: [vitest.config.mts](mdc:vitest.config.mts)
+  - E2E tests: [vitest.config.e2e.mts](mdc:vitest.config.e2e.mts)
+
+## Test Types
+
+- **Unit Tests**: Test individual components in isolation
+- **Integration Tests**: Test components working together
+- **E2E Tests**: Test the entire application
+
+## Test File Organization
+
+- Tests should be alongside the code being tested or in a parallel directory structure
+- Unit test files should follow the naming convention `[file-name].spec.ts`
+- E2E test files should follow the naming convention `[file-name].e2e-spec.ts`
+
+## Test Principles
+
+- Test behavior, not implementation details
+- Use mocks for external dependencies
+- Test edge cases and error paths
+- Keep tests independent and isolated
+
+## Mocking
+
+- Use mocks for external dependencies
+- Mock repositories and services in unit tests
+- Use in-memory implementations for repositories when appropriate
+
+## Test Setup
+
+- Use beforeEach/beforeAll for common setup
+- Clean up after tests with afterEach/afterAll
+- Use test factories for creating test data
+
+## Domain Tests
+
+- Focus on testing business logic and use cases
+- Mock repositories and external services
+- Test both success and failure paths
+
+## Infrastructure Tests
+
+- Test integration with external systems
+- Use real database or containerized services for integration tests
+- Test error handling and edge cases
+
+## Coverage
+
+- Run coverage reports with `npm run test:cov`
+- Aim for high coverage in domain and application layers
+- Focus on critical paths in infrastructure layer

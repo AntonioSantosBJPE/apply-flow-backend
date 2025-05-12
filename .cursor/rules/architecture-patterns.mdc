@@ -1,0 +1,63 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Architecture Patterns
+
+The application follows several architectural patterns to maintain a clean, maintainable codebase.
+
+## Domain-Driven Design (DDD)
+
+- The codebase is organized around business domains
+- Each domain has its own bounded context
+- Clear separation between domain, application, and infrastructure layers
+
+## Clean Architecture
+
+- Dependencies point inward (infrastructure depends on domain, not vice versa)
+- Domain layer is isolated from external concerns
+- Use cases implement application business logic
+- Controllers/Gateways are thin and focus on HTTP/external concerns
+
+## Dependency Injection
+
+- Uses NestJS's built-in dependency injection system
+- Constructor injection for services and repositories
+- Services implement interfaces for better testability and decoupling
+
+## Repository Pattern
+
+- Repository interfaces defined in domain layer
+- Implementation details in infrastructure layer
+- Abstracts data access operations
+
+## Use Case Pattern
+
+- Business logic encapsulated in specific use case classes
+- Single responsibility principle
+- Input/output boundaries through DTOs
+
+## Either Pattern
+
+The codebase uses the Either pattern for error handling:
+- [core/either.ts](mdc:src/core/either.ts)
+- Represents a value of one of two possible types (a disjoint union)
+- Used to handle success/failure scenarios without throwing exceptions
+
+## Module Pattern
+
+- NestJS module system used for organizing components
+- Each domain and infrastructure concern has its own module
+- Module dependencies explicitly declared
+
+## Modular Architecture
+
+- Application is divided into domain-specific modules
+- Each module encapsulates related controllers, use cases, and services
+- The main HttpModule acts as an aggregator, importing domain modules
+- Domain-specific code must be registered in the appropriate module:
+  - ClientModule for client-related features
+  - SubscriptionModule for subscription-related features
+  - And so on for each domain area
+- This promotes separation of concerns and maintains bounded contexts

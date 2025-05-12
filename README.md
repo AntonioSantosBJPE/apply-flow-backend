@@ -23,8 +23,7 @@ Esta API fornece uma solução completa para gerenciamento de usuários, roles e
 
 - [x] Inicializar projeto NestJS com TypeScript
 - [x] Configurar ESLint, Prettier
-- [ ] Configurar Husky
-- [ ] Configurar Git actions
+- [ ] Adicionar regras do cursor ao projeto
 - [ ] Estruturar pastas seguindo arquitetura limpa
 - [ ] Configurar Docker e Docker Compose para desenvolvimento
 - [ ] Conectar Prisma ao PostgreSQL
@@ -90,6 +89,8 @@ Esta API fornece uma solução completa para gerenciamento de usuários, roles e
 
 ### Checkpoint 10: Deploy
 
+- [ ] Configurar Husky
+- [ ] Configurar Git actions
 - [ ] Configurar variáveis de ambiente para produção
 - [ ] Criar scripts de migração para produção
 - [ ] Configurar Docker para ambiente de produção

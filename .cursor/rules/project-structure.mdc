@@ -1,0 +1,63 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Project Structure
+
+The codebase follows a domain-driven design approach with a clear separation of concerns.
+
+## Main Directories
+
+- **src/**: Main source code
+  - **domain/**: Contains business domain modules
+  - **infra/**: Infrastructure-related code
+  - **core/**: Core utilities, entities, and constants
+  - **@types/**: TypeScript type definitions
+
+## Domain Structure
+
+Each domain module typically follows this structure:
+- **application/**: Application layer with use cases
+  - **use-cases/**: Specific business use cases
+- **entities/**: Domain entities
+- **repositories/**: Repository interfaces
+- **dtos/**: Data Transfer Objects
+- **services/**: Domain services
+
+## Infrastructure Structure
+
+The infrastructure layer includes:
+- **http/**: HTTP controllers and routes
+  - **controllers/**: HTTP controllers organized by domain
+  - **presenters/**: Response presenters
+  - **injectable-use-cases/**: NestJS injectable use cases
+  - **http-modules/**: Domain-specific NestJS modules
+    - **modules/**: Each domain has its own module file
+  - **http.module.ts**: Main HTTP module that aggregates domain modules
+- **database/**: Database configuration and repositories implementation
+- **auth/**: Authentication infrastructure
+- **file/**: File handling services
+- **queue/**: Queue implementation with BullMQ
+- **mail/**: Email sending services
+- **middlewares/**: HTTP middlewares
+- **env/**: Environment configuration
+
+## Module Organization
+
+The application uses a modular approach based on domains:
+- The `http/http-modules/modules/` directory contains domain-specific modules
+- Each module (like `ClientModule`, `SubscriptionModule`) should contain related controllers and use cases
+- Domain-specific controllers and use cases must be registered in their respective domain module
+- The main `HttpModule` imports all domain modules and only contains app-wide components
+
+## Core Components
+
+- **core/constants/**: Application constants with _ENUM suffix
+- **core/entities/**: Base entity implementations
+- **core/errors/**: Error definitions
+- **core/repositories/**: Base repository interfaces
+- **core/utils/**: Utility functions
+- **core/types/**: Common type definitions
+- **core/file/**: File handling utilities
+- **core/events/**: Event handling

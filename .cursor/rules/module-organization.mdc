@@ -1,0 +1,163 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Module Organization
+
+This project uses NestJS modules to organize code and dependencies. The following guidelines apply to module organization.
+
+## Module Structure
+
+Each domain module should follow this structure:
+- One main module file (`[name].module.ts`)
+- Separate files for controllers, services, and repositories
+- Services folder if there's more than one service
+- Clear separation of concerns between components
+
+## App Module
+
+The main application module [app.module.ts](mdc:src/infra/app.module.ts) imports and configures all other modules:
+- Core infrastructure modules
+- Domain modules
+- Global providers
+
+## HTTP Module and Domain Modules
+
+The HttpModule serves as an aggregator that imports all domain modules:
+- All domain-specific controllers and use cases **must be registered in their corresponding domain module** in `src/infra/http/http-modules/modules/` directory
+- The main `HttpModule` should only contain app-wide controllers and providers that don't fit into any domain module
+- Never register domain-specific controllers directly in the main HttpModule
+
+Follow these domain module assignments:
+<!-- - **ClientModule**: Client entity, profiles, addresses, banking, settings, investor profiles
+- **ClientUserModule**: Client user authentication, passwords, user profiles, sessions
+- **SubscriptionModule**: Subscriptions, plans, payments, billing, contracts
+- **FleetModule**: Vehicles, fleet management, maintenance, assignments
+- **TaskModule**: Tasks, assignments, scheduling, reporting
+- **LogErrorModule**: Error logging, reporting, system logs
+- **PermissionModule**: Roles, permissions, access control
+- **UserModule**: System users (not client users), admin accounts
+- **PublicModule**: Public-facing APIs, non-authenticated endpoints -->
+
+## Public Route Configuration
+
+When creating public endpoints, you must configure them in two places:
+
+1. **Add the route constant in `src/core/constants/routes.ts`**:
+```typescript
+export const ROUTES = {
+  PUBLIC: {
+    // Add your route in the appropriate section
+    CLIENT_PROFILE: {
+      ACCEPT_INVESTOR_PROFILE_CREATION: '/accept-investor-profile-creation',
+    },
+  },
+}
+```
+
+2. **Register in `src/core/constants/routes-need-public-key-routes.ts`**:
+```typescript
+export const ROUTES_NEED_PUBLIC_KEY: RouteInfo[] = [
+  // Add your public route
+  {
+    method: RequestMethod.POST, // Use appropriate HTTP method
+    path: ROUTES.PUBLIC.CLIENT_PROFILE.ACCEPT_INVESTOR_PROFILE_CREATION,
+  },
+]
+```
+
+Both steps are required for public routes to be properly accessible and protected by the public key authentication mechanism.
+
+## Dependencies in Modules
+
+All domain modules must import `DependenciesModule` to access common infrastructure:
+- `DatabaseModule` provides all Prisma repositories
+- `CryptographyModule` provides TokenVerify, Encrypter, and other crypto services
+- `MailModule` provides email services
+- `FileModule` provides file handling services
+- `EnvModule` provides environment configuration
+
+```typescript
+@Module({
+  imports: [DependenciesModule], // This is essential for access to repositories and services
+  controllers: [ /* controllers */ ],
+  providers: [ /* use cases and services */ ],
+})
+export class DomainModule {}
+```
+
+When adding a new use case or service that depends on repositories or services:
+1. Ensure the module imports `DependenciesModule`
+2. Check that the repository or service is exported by one of the modules imported
+3. If using a custom service, register it in the providers array
+4. For dependencies used by other modules, add them to the exports array
+
+## Common Dependency Injection Errors
+
+### Error: Can't resolve dependencies
+
+If you see an error like:
+```
+Error: Nest can't resolve dependencies of the NestMyUseCase (?, TokenVerify). 
+Please make sure that the argument Repository at index [0] is available in the Module context.
+```
+
+This usually means:
+1. The dependency (like a repository) is not available in the module context
+2. The order of dependencies in the constructor doesn't match the base class
+
+### How to fix dependency injection errors:
+
+1. **Check the DependenciesModule import**: Ensure the module imports DependenciesModule
+2. **Check dependency order**: Ensure the order of constructor parameters in your NestJS injectable classes matches the order in the base classes
+3. **Register missing providers**: If using custom services, register them in the module's providers array
+4. **Check for circular dependencies**: Avoid circular dependencies between modules
+
+## Domain Modules
+
+Domain modules should:
+- Focus on specific business domain
+- Export only what's necessary for other modules
+- Keep implementation details private
+- Use clear dependency injection
+
+## Infrastructure Modules
+
+Infrastructure modules handle external concerns:
+- Database connections
+- HTTP controllers
+- Authentication
+- File storage
+- Queue management
+- Email services
+
+## Module Registration
+
+Use appropriate registration techniques:
+- `useClass` for standard implementations
+- `useFactory` for dynamic configuration
+- `useValue` for static configuration
+- `forRoot`/`forFeature` pattern for modules with configuration
+
+## Provider Registration
+
+- Register providers within their respective modules
+- Use appropriate scope (default, request, transient)
+- Consider using custom provider tokens for better decoupling
+
+## Circular Dependencies
+
+- Avoid circular dependencies between modules
+- Use forward references when necessary
+- Consider extracting shared code to common modules
+
+## File Organization with Modules
+
+When adding new features, follow this organization:
+1. Create the domain use case in `src/domain/{domain-name}/application/use-cases/`
+2. Create the NestJS injectable use case in `src/infra/http/injectable-use-cases/{domain-name}/`
+3. Create the controller in `src/infra/http/controllers/{domain-name}/`
+4. Create any necessary presenters in `src/infra/http/presenters/{domain-name}/`
+5. Register the controller and use case in the appropriate domain module, NOT in the main HttpModule
+6. Ensure all dependencies are available through `DependenciesModule` or registered in the module

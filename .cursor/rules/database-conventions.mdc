@@ -1,0 +1,57 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Database Conventions
+
+This project uses Prisma ORM for database operations with specific conventions for repositories and data handling.
+
+## ORM
+
+- Prisma is used as the ORM
+- Schema defined in [prisma/schema.prisma](mdc:prisma/schema.prisma)
+- Seeding scripts located in [prisma/seeds/](mdc:prisma/seeds) directory
+
+## Repository Pattern
+
+- Domain repositories are interfaces defined in domain modules
+- Implementations use Prisma Client in the infrastructure layer
+- Repository methods return domain entities, not ORM models
+- Repositories abstract database operations from business logic
+
+## Data Mapping
+
+- Explicit mapping between Prisma models and domain entities
+- No leaking of ORM types to domain layer
+- Domain entities are plain TypeScript objects with behavior
+
+## Transaction Handling
+
+- Use Prisma transactions for operations requiring atomicity
+- Abstract transaction handling in repository implementations
+- Handle transaction errors appropriately
+
+## Query Optimization
+
+- Use Prisma includes for related data
+- Optimize queries to fetch only necessary data
+- Consider pagination for large result sets
+
+## Database Error Handling
+
+- Use specific error types for database errors
+- Handle common errors like unique constraint violations
+- Map database errors to domain errors
+
+## Migrations
+
+- Use Prisma migrate for schema changes
+- Script database migrations for production deployment
+- Use seeds for initial data and testing
+
+## Data Validation
+
+- Validate data before saving to database
+- Use domain entities for business logic validation
+- Use DTOs for input validation
