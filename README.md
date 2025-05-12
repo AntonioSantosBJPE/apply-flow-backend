@@ -30,9 +30,9 @@ Esta API fornece uma solução completa para gerenciamento de usuários, roles e
 
 ### Checkpoint 2: Configuração do Banco de Dados
 
-- [ ] Conectar Prisma ao PostgreSQL
-- [ ] Definir esquemas Prisma para entidades base
-- [ ] Criar migrações iniciais
+- [x] Conectar Prisma ao PostgreSQL
+- [x] Definir esquemas Prisma para entidades base
+- [x] Criar migrações iniciais
 - [ ] Implementar seeds para dados iniciais
 - [ ] Configurar ambiente de teste com banco separado
 
