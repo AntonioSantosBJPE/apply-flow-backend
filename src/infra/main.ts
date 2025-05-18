@@ -1,8 +1,30 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { EnvService } from './env/env.service';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { patchNestJsSwagger } from 'nestjs-zod';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(process.env.PORT ?? 3333);
+  app.enableCors();
+
+  const configService = app.get(EnvService);
+  const port = configService.get('PORT');
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  patchNestJsSwagger();
+  const config = new DocumentBuilder()
+    .setTitle('Marvinus')
+    .setDescription('Documentação da API do Marvinus')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+
+  if (configService.get('ENABLE_SWAGGER') === 'TRUE') {
+    SwaggerModule.setup('api', app, document);
+  }
+  await app.listen(port);
 }
 void bootstrap();
