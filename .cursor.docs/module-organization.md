@@ -488,3 +488,88 @@ When adding new features, follow this organization:
 4. Create any necessary presenters in `src/infra/http/presenters/{domain-name}/`
 5. Register the controller and use case in the appropriate domain module, NOT in the main HttpModule
 6. Ensure all dependencies are available through `DependenciesModule` or registered in the module
+
+## Módulos Específicos
+
+### DepartmentModule
+
+O módulo `DepartmentModule` deve ser registrado no diretório `src/infra/http/http-modules/modules/department.module.ts` e ser responsável por:
+
+- Gerenciar entidades de departamento
+- Lidar com permissões específicas de departamento
+- Implementar operações CRUD para departamentos
+
+**Use Cases**:
+- CreateDepartmentUseCase
+- UpdateDepartmentUseCase
+- FindDepartmentByIdUseCase
+- DeleteDepartmentUseCase
+- ListDepartmentsUseCase
+- AssignPermissionToDepartmentUseCase
+- RemovePermissionFromDepartmentUseCase
+- ListDepartmentPermissionsUseCase
+
+**Controllers**:
+- DepartmentController
+- DepartmentPermissionController
+
+### PositionModule
+
+O módulo `PositionModule` deve ser registrado no diretório `src/infra/http/http-modules/modules/position.module.ts` e ser responsável por:
+
+- Gerenciar cargos (posições) dentro dos departamentos
+- Lidar com permissões específicas de cargo
+- Implementar operações CRUD para cargos
+
+**Use Cases**:
+- CreatePositionUseCase
+- UpdatePositionUseCase
+- FindPositionByIdUseCase
+- DeletePositionUseCase
+- ListPositionsUseCase
+- ListPositionsByDepartmentUseCase
+- AssignPermissionToPositionUseCase
+- RemovePermissionFromPositionUseCase
+- ListPositionPermissionsUseCase
+
+**Controllers**:
+- PositionController
+- PositionPermissionController
+
+### PermissionGroupModule
+
+O módulo `PermissionGroupModule` deve ser registrado no diretório `src/infra/http/http-modules/modules/permission-group.module.ts` e ser responsável por:
+
+- Gerenciar grupos de permissões relacionadas
+- Facilitar a organização e atribuição de permissões
+- Implementar operações CRUD para grupos de permissões
+
+**Use Cases**:
+- CreatePermissionGroupUseCase
+- UpdatePermissionGroupUseCase
+- FindPermissionGroupByIdUseCase
+- DeletePermissionGroupUseCase
+- ListPermissionGroupsUseCase
+- AddPermissionToGroupUseCase
+- RemovePermissionFromGroupUseCase
+- ListPermissionsInGroupUseCase
+
+**Controllers**:
+- PermissionGroupController
+
+### AuthorizationModule
+
+O módulo `AuthorizationModule` deve ser registrado no diretório `src/infra/http/http-modules/modules/authorization.module.ts` e ser responsável por:
+
+- Implementar o sistema de verificação de permissões
+- Fornecer middlewares e guards para autorização
+- Gerenciar o cache de permissões
+
+**Providers**:
+- PermissionVerificationService
+- CachedPermissionVerificationService
+- PermissionGuard
+- AuthorizationMiddleware
+
+**Guards**:
+- PermissionGuard
