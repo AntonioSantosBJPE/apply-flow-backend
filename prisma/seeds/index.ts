@@ -13,7 +13,7 @@ import { seedUserPermissions } from './user-permissions';
 
 const prisma = new PrismaClient();
 
-async function main() {
+async function main(): Promise<void> {
   console.log('🌱 Starting database seeding...');
 
   try {
@@ -46,4 +46,4 @@ async function main() {
   }
 }
 
-main();
+void main();
