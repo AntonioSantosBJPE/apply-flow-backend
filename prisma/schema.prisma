@@ -20,8 +20,8 @@ model User {
   password_hash     String    @db.VarChar(255)
   first_name        String    @db.VarChar(255)
   last_name         String    @db.VarChar(255)
-  department        String    @db.VarChar(255)
-  position          String    @db.VarChar(255)
+  department_id     String    @db.Uuid
+  position_id       String    @db.Uuid
   is_active         Boolean   @default(true)
   is_email_verified Boolean   @default(false)
   last_login        DateTime?
@@ -29,6 +29,8 @@ model User {
   updated_at        DateTime  @updatedAt
 
   // Relations
+  department       Department       @relation(fields: [department_id], references: [id])
+  position         Position         @relation(fields: [position_id], references: [id])
   user_roles       UserRole[]
   user_permissions UserPermission[]
   refresh_tokens   RefreshToken[]
@@ -55,20 +57,98 @@ model Role {
   @@map("roles")
 }
 
+model Department {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String   @unique
+  description String?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  // Relations
+  users       User[]
+  positions   Position[]
+  permissions DepartmentPermission[]
+
+  @@map("departments")
+}
+
+model Position {
+  id            String   @id @default(uuid()) @db.Uuid
+  name          String
+  description   String?
+  department_id String   @db.Uuid
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  // Relations
+  users       User[]
+  department  Department           @relation(fields: [department_id], references: [id])
+  permissions PositionPermission[]
+
+  @@unique([name, department_id])
+  @@map("positions")
+}
+
+model PermissionGroup {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String   @unique
+  description String?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  // Relations
+  permissions Permission[]
+
+  @@map("permission_groups")
+}
+
 model Permission {
   id          String   @id @default(uuid()) @db.Uuid
   action      String
   resource    String
   description String
+  is_route    Boolean  @default(false)
+  group_id    String?  @db.Uuid
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
 
   // Relations
-  user_permissions UserPermission[]
-  role_permissions RolePermission[]
+  group                  PermissionGroup?       @relation(fields: [group_id], references: [id])
+  user_permissions       UserPermission[]
+  role_permissions       RolePermission[]
+  department_permissions DepartmentPermission[]
+  position_permissions   PositionPermission[]
 
   @@unique([action, resource])
   @@map("permissions")
+}
+
+model DepartmentPermission {
+  id            String   @id @default(uuid()) @db.Uuid
+  department_id String   @db.Uuid
+  permission_id String   @db.Uuid
+  assigned_at   DateTime @default(now())
+
+  // Relations
+  department Department @relation(fields: [department_id], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permission_id], references: [id], onDelete: Cascade)
+
+  @@unique([department_id, permission_id])
+  @@map("department_permissions")
+}
+
+model PositionPermission {
+  id            String   @id @default(uuid()) @db.Uuid
+  position_id   String   @db.Uuid
+  permission_id String   @db.Uuid
+  assigned_at   DateTime @default(now())
+
+  // Relations
+  position   Position   @relation(fields: [position_id], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permission_id], references: [id], onDelete: Cascade)
+
+  @@unique([position_id, permission_id])
+  @@map("position_permissions")
 }
 
 model UserRole {
