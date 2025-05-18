@@ -10,7 +10,7 @@ export const envSchema = z.object({
   APP_PRIVATE_KEY: z.coerce.string(),
   JWT_TOKEN_EXPIRES_IN: z.string(),
   PUBLIC_TOKEN_EXPIRES_IN: z.string(),
-  REFRESH_TOKEN_EXPIRES_IN: z.string(),
+  REFRESH_TOKEN_EXPIRES_IN: z.coerce.number(),
 });
 
 export type Env = z.infer<typeof envSchema>;

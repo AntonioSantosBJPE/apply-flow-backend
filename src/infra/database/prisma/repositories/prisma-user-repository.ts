@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { UserRepository } from '@/domain/user/repositories/user-repository';
-import { User } from '@/domain/user/entities/user';
+import { UserRepository } from '@/domain/user/application/repositories/user-repository';
+import { User } from '@/domain/user/enterprise/entities/user';
 import { UserMapper } from '../../mappers/user-mapper';
 import { createPaginator } from 'prisma-pagination';
 import { Prisma, User as PrismaUser } from 'generated/prisma';

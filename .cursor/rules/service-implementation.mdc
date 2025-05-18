@@ -1,0 +1,114 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Domain Service Implementation Guidelines
+
+## Service Placement
+
+Place domain services in the appropriate domain application layer:
+
+```
+src/domain/{domain-name}/application/services/{service-name}.service.ts
+```
+
+## Service Module Registration
+
+Every service should have a corresponding module:
+
+```
+src/domain/{domain-name}/application/services/{service-name}-service.module.ts
+```
+
+## Service Implementation
+
+Domain services should follow these guidelines:
+
+1. Use the `@Injectable()` decorator
+2. Inject dependencies via constructor
+3. Implement clear method signatures with proper return types
+4. Encapsulate domain logic that doesn't belong to entities
+
+```typescript
+@Injectable()
+export class TokenService {
+  constructor(
+    private encrypter: Encrypter,
+    private env: EnvService,
+    private refreshTokenRepository: RefreshTokenRepository,
+  ) {}
+
+  async generateTokens(
+    userId: UniqueEntityID,
+    ipAddress?: string,
+    deviceInfo?: string,
+  ): Promise<GenerateTokensResponse> {
+    // Implementation of token generation logic
+    return {
+      accessToken,
+      refreshToken,
+    };
+  }
+}
+```
+
+## Module Implementation
+
+Service modules should provide and export the service:
+
+```typescript
+import { Module } from '@nestjs/common';
+import { TokenService } from './token.service';
+
+@Module({
+  providers: [TokenService],
+  exports: [TokenService],
+})
+export class TokenServiceModule {}
+```
+
+## Service Composition
+
+When a service depends on other services, import their modules:
+
+```typescript
+import { Module } from '@nestjs/common';
+import { TokenService } from './token.service';
+import { CryptographyModule } from '@/infra/cryptography/cryptography.module';
+
+@Module({
+  imports: [CryptographyModule],
+  providers: [TokenService],
+  exports: [TokenService],
+})
+export class TokenServiceModule {}
+```
+
+## Using Services in Use Cases
+
+Inject services into use cases for clean separation of concerns:
+
+```typescript
+@Injectable()
+export class AuthenticateUserUseCase {
+  constructor(
+    private userRepository: UserRepository,
+    private hashComparer: HashComparer,
+    private tokenService: TokenService, // Inject the service
+  ) {}
+
+  async execute(params: AuthenticateUserUseCaseRequest): Promise<AuthenticateUserUseCaseResponse> {
+    // Business logic...
+    
+    // Use the service
+    const { accessToken, refreshToken } = await this.tokenService.generateTokens(
+      user.id,
+      params.ipAddress,
+      params.deviceInfo,
+    );
+    
+    // Return response...
+  }
+}
+```
