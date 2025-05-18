@@ -4,6 +4,12 @@
   "sourceRoot": "src",
   "entryFile": "infra/main",
   "compilerOptions": {
+    "assets": [
+      { "include": "/**/*.hbs", "outDir": "dist/src/" },
+      { "include": "../assets", "outDir": "dist/assets", "watchAssets": true },
+      { "include": "../generated", "outDir": "dist/generated" }
+    ],
+    "watchAssets": true,
     "deleteOutDir": true
   }
 }
