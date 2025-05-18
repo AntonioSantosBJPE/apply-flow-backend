@@ -17,8 +17,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     const responseBody: DefaultExceptionBody = {
       statusCode: 500,
-      message: 'Erro no Http.',
-      error: exception.message || 'Erro Http.',
+      message: 'HTTP Error',
+      error: exception.message || 'HTTP Error',
     };
     response.status(responseBody.statusCode).json(responseBody);
   }

@@ -6,6 +6,7 @@ export const envSchema = z.object({
   ENABLE_SWAGGER: z.string().optional().default('FALSE'),
   JWT_PRIVATE_KEY: z.string(),
   JWT_PUBLIC_KEY: z.string(),
+  PUBLIC_KEY: z.string(),
   APP_PRIVATE_KEY: z.coerce.string(),
   JWT_TOKEN_EXPIRES_IN: z.string(),
   PUBLIC_TOKEN_EXPIRES_IN: z.string(),

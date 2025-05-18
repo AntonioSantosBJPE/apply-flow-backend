@@ -13,9 +13,9 @@ export class AllExceptionFilter implements ExceptionFilter {
 
     const responseBody: DefaultExceptionBody = {
       statusCode: 500,
-      message: 'Erro in All.',
+      message: 'All Error',
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-      error: exception.message || 'Erro in All.',
+      error: exception.message || 'All Error',
     };
     response.status(responseBody.statusCode).json(responseBody);
   }

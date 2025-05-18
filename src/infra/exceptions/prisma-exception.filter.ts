@@ -28,9 +28,9 @@ export class PrismaExceptionFilter implements ExceptionFilter {
 
     const responseBody: DefaultExceptionBody = {
       statusCode: 500,
-      message: 'Erro in Prisma.',
+      message: 'Prisma Error',
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-      error: exception.message || 'Erro in Prisma.',
+      error: exception.message || 'Prisma Error',
     };
 
     response.status(responseBody.statusCode).json(responseBody);
