@@ -11,7 +11,6 @@ async function bootstrap() {
   const configService = app.get(EnvService);
   const port = configService.get('PORT');
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   patchNestJsSwagger();
   const config = new DocumentBuilder()
     .setTitle('Auth Guard API')

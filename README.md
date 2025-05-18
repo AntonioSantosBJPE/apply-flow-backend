@@ -32,15 +32,15 @@ Esta API fornece uma solução completa para gerenciamento de usuários, departa
 - [x] Conectar Prisma ao PostgreSQL
 - [x] Definir esquemas Prisma para entidades base
 - [x] Criar migrações iniciais
-- [ ] Implementar seeds para dados iniciais
+- [x] Implementar seeds para dados iniciais
 - [ ] Configurar ambiente de teste com banco separado
 
 ### Checkpoint 3: Módulo de Usuários
 
 - [x] Implementar Swagger
-- [ ] Implementar registro de usuários
-- [ ] Criar sistema de login com JWT
+- [x] Criar sistema de login com JWT
 - [ ] Implementar refresh tokens
+- [ ] Implementar registro de usuários
 - [ ] Adicionar recuperação de senha
 - [ ] Implementar gerenciamento de sessões ativas
 
