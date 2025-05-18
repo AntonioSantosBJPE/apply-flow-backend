@@ -5,9 +5,10 @@ import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from '@/infra/exceptions/http-exception.filter';
 import { PrismaService } from '@/infra/database/prisma/prisma.service';
 import { DependenciesModule } from './dependencies.module';
+import { UserModule } from '../http-modules/modules/user.module';
 
 @Module({
-  imports: [DependenciesModule],
+  imports: [DependenciesModule, UserModule],
   controllers: [CreatePublicTokenController],
   providers: [
     NestCreatePublicTokenUseCase,

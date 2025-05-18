@@ -1,0 +1,66 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Domain Entity Naming Conventions
+
+## Property Naming
+
+When implementing domain entities:
+
+- Use `snake_case` for property names, matching the database schema
+- Never use camelCase for property names in entity classes
+
+## Example
+
+```typescript
+// ✅ CORRECT
+export interface UserProps {
+  email: string;
+  password_hash: string;
+  first_name: string;
+  last_name: string;
+  is_active: boolean;
+}
+
+// ❌ INCORRECT
+export interface UserProps {
+  email: string;
+  passwordHash: string;
+  firstName: string;
+  lastName: string;
+  isActive: boolean;
+}
+```
+
+## Getters and Setters
+
+All properties should have getters and setters following the same naming convention:
+
+```typescript
+export class User extends Entity<UserProps> {
+  // Getter
+  get first_name() {
+    return this.props.first_name;
+  }
+
+  // Setter with state tracking
+  set first_name(value: string) {
+    this.props.first_name = value;
+    this.touch();
+  }
+}
+```
+
+## Mutation Tracking
+
+Always implement a `touch()` method to update timestamps:
+
+```typescript
+private touch() {
+  this.props.updated_at = new Date();
+}
+```
+
+Call this method in every setter and state-changing method.

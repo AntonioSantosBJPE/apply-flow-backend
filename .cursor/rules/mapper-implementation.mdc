@@ -1,0 +1,93 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Mapper Implementation Guidelines
+
+## Domain to Persistence Mapping
+
+When implementing mappers between domain entities and database models:
+
+1. Use explicit property access, matching the naming convention of each layer:
+
+```typescript
+static toPrisma(user: User) {
+  return {
+    id: user.id.toValue(),
+    email: user.email,
+    password_hash: user.password_hash,  // Match domain entity property name
+    first_name: user.first_name,
+    last_name: user.last_name,
+    department_id: user.department_id.toValue(),
+    position_id: user.position_id.toValue(),
+    is_active: user.is_active,
+    is_email_verified: user.is_email_verified,
+    last_login: user.last_login,
+    created_at: user.created_at,
+    updated_at: user.updated_at,
+  };
+}
+```
+
+2. Use `toValue()` for UniqueEntityID fields
+
+## Persistence to Domain Mapping
+
+When mapping from persistence to domain:
+
+```typescript
+static toDomain(raw: PrismaUser): User {
+  return User.create(
+    {
+      email: raw.email,
+      password_hash: raw.password_hash,
+      first_name: raw.first_name,
+      last_name: raw.last_name,
+      department_id: new UniqueEntityID(raw.department_id),
+      position_id: new UniqueEntityID(raw.position_id),
+      is_active: raw.is_active,
+      is_email_verified: raw.is_email_verified,
+      last_login: raw.last_login || undefined,
+      created_at: raw.created_at,
+      updated_at: raw.updated_at,
+    },
+    new UniqueEntityID(raw.id),
+  );
+}
+```
+
+## Collection Mapping
+
+When mapping collections, always use explicit function call syntax:
+
+```typescript
+// ✅ CORRECT
+data: paginatedResult.data.map((user) => UserMapper.toDomain(user)),
+
+// ❌ INCORRECT - can cause binding issues
+data: paginatedResult.data.map(UserMapper.toDomain),
+```
+
+## Type Parameters
+
+Always specify explicit type parameters when using generic methods:
+
+```typescript
+// ✅ CORRECT
+const paginatedResult = await paginate<PrismaUser, Prisma.UserFindManyArgs>(
+  this.prisma.user,
+  {
+    where: { is_active: true },
+    orderBy: { created_at: 'desc' },
+  },
+  { page: params.page }
+);
+
+// ❌ INCORRECT - missing type parameters
+const paginatedResult = await paginate(
+  this.prisma.user,
+  { /* query */ },
+  { page: params.page }
+);
+```
