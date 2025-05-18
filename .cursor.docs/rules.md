@@ -46,9 +46,28 @@
 ### API Endpoint Design
 
 - Public endpoints should be decorated with `@Public()` decorator
-- Authentication required endpoints should use `@ApiBearerAuth()`
+- ALL endpoints (including public ones) should be decorated with `@ApiBearerAuth()` for Swagger documentation
+- Authentication required endpoints should use `@ApiBearerAuth()` without the `@Public()` decorator
 - Use appropriate HTTP methods for endpoints (GET, POST, PUT, DELETE)
 - Document API endpoints with Swagger decorators
+- Set explicit HTTP status codes with `@HttpCode()` decorator
+
+Example:
+```typescript
+import { Public } from '@/infra/auth/public';
+import { ApiBearerAuth } from '@nestjs/swagger';
+
+@ApiBearerAuth() // Required for ALL endpoints for Swagger docs
+@Controller()
+@Public() // Only for public endpoints
+export class LoginController {
+  @Post('/login')
+  @HttpCode(200)
+  async login() {
+    // Implementation
+  }
+}
+```
 
 ### Presenter Pattern and Error Handling
 
@@ -66,29 +85,32 @@ Example presenter implementation:
 import { FindByIdWithPlanClientUserResponse } from '@/domain/client-user/application/repositories/clients-users-repository'
 import { BasePresenter } from '../base-presenter'
 
-export class ViewClientUserByTokenIdPresenter extends BasePresenter {
-  static toHTTP(clientUser: FindByIdWithPlanClientUserResponse) {
+type LoginPresenterPayload = {
+  accessToken: string;
+  refreshToken: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+  };
+};
+
+export class LoginPresenter extends BasePresenter {
+  static toHttp(data: LoginPresenterPayload) {
     return this.safeParse(
-      clientUser,
+      data,
       (data) => ({
-        id: data.id,
-        client_id: Number(data.client_id),
-        full_name: data.full_name,
-        email: data.email,
-        status: data.status,
-        type_authentication: data.type_authentication,
-        plan_name:
-          data.client.subscription && data.client.subscription.length > 0
-            ? data.client.subscription[0].plan_frequency.plan.name
-            : null,
-        created_at: data.created_at,
-        updated_at: data.updated_at,
+        accessToken: data.accessToken,
+        refreshToken: data.refreshToken,
+        user: data.user,
       }),
-      'ViewClientUserByTokenIdPresenter',
-    )
+      'LoginPresenter',
+    );
   }
 }
 ```
+
+For presenter errors, use the `PresenterExceptionFactory` which will create appropriate HTTP exceptions
 
 ### Public Route Configuration
 

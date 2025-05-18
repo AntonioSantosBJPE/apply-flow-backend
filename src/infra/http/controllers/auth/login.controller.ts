@@ -6,7 +6,12 @@ import {
   Post,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ROUTES } from '@/core/constants/routes';
 import { z } from 'zod';
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe';
@@ -22,7 +27,7 @@ const loginUserBodySchema = z.object({
 
 const bodyValidationPipe = new ZodValidationPipe(loginUserBodySchema);
 class LoginUserBodySchema extends createZodDto(loginUserBodySchema) {}
-
+@ApiBearerAuth()
 @Controller()
 @Public()
 @ApiTags(ROUTES.AUTH.LOGIN.TAGS)
@@ -60,7 +65,6 @@ export class LoginController {
   async login(
     @Body(bodyValidationPipe) body: LoginUserBodySchema,
     @Ip() ip: string,
-    // @Headers('user-agent') userAgent: string,
   ) {
     const result = await this.authenticateUser.execute({
       email: body.email,

@@ -40,6 +40,36 @@ export class LoginController {
 }
 ```
 
+## Authentication and Route Protection
+
+Controllers must correctly indicate their authentication requirements:
+
+1. For public endpoints, use the `@Public()` decorator:
+
+```typescript
+import { Public } from '@/infra/auth/public';
+
+@Controller()
+@Public() // Mark the entire controller as public
+export class LoginController {
+  // Public endpoints
+}
+```
+
+2. For Swagger documentation, use `@ApiBearerAuth()` to indicate that the API uses Bearer token authentication:
+
+```typescript
+import { ApiBearerAuth } from '@nestjs/swagger';
+
+@ApiBearerAuth() // Indicates Bearer token authentication in Swagger docs
+@Controller()
+export class UserController {
+  // Protected endpoints
+}
+```
+
+Note: It is important to include `@ApiBearerAuth()` even for public endpoints as it properly documents the authentication scheme in the API documentation, ensuring consistency across the application.
+
 ## Response Formatting with Presenters
 
 Always use presenters to format controller responses for consistency:
@@ -134,15 +164,20 @@ import {
   Post,
   UnauthorizedException,
   Ip,
-  Headers,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ROUTES } from '@/core/constants/routes';
 import { z } from 'zod';
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe';
 import { createZodDto } from 'nestjs-zod';
 import { LoginPresenter } from '@/infra/presenters/auth/login.presenter';
 import { NestAuthenticateUserUseCase } from '@/infra/injectable-use-cases/auth/nest-authenticate-user-use-case';
+import { Public } from '@/infra/auth/public';
 
 const loginUserBodySchema = z.object({
   email: z.string().trim().min(3).max(255).email(),
@@ -152,7 +187,9 @@ const loginUserBodySchema = z.object({
 const bodyValidationPipe = new ZodValidationPipe(loginUserBodySchema);
 class LoginUserBodySchema extends createZodDto(loginUserBodySchema) {}
 
+@ApiBearerAuth()
 @Controller()
+@Public()
 @ApiTags(ROUTES.AUTH.LOGIN.TAGS)
 export class LoginController {
   constructor(private authenticateUser: NestAuthenticateUserUseCase) {}
@@ -188,17 +225,15 @@ export class LoginController {
   async login(
     @Body(bodyValidationPipe) body: LoginUserBodySchema,
     @Ip() ip: string,
-    @Headers('user-agent') userAgent: string,
   ) {
     const result = await this.authenticateUser.execute({
       email: body.email,
       password: body.password,
       ipAddress: ip,
-      deviceInfo: userAgent,
     });
 
     if (result.isLeft()) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException(result.value.message);
     }
 
     return LoginPresenter.toHttp(result.value);

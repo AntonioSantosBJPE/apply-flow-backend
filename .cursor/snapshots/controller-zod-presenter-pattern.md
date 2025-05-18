@@ -12,15 +12,20 @@ import {
   Post,
   UnauthorizedException,
   Ip,
-  Headers,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ROUTES } from '@/core/constants/routes';
 import { z } from 'zod';
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe';
 import { createZodDto } from 'nestjs-zod';
 import { LoginPresenter } from '@/infra/presenters/auth/login.presenter';
 import { NestAuthenticateUserUseCase } from '@/infra/injectable-use-cases/auth/nest-authenticate-user-use-case';
+import { Public } from '@/infra/auth/public';
 
 const loginUserBodySchema = z.object({
   email: z.string().trim().min(3).max(255).email(),
@@ -30,7 +35,9 @@ const loginUserBodySchema = z.object({
 const bodyValidationPipe = new ZodValidationPipe(loginUserBodySchema);
 class LoginUserBodySchema extends createZodDto(loginUserBodySchema) {}
 
+@ApiBearerAuth()
 @Controller()
+@Public()
 @ApiTags(ROUTES.AUTH.LOGIN.TAGS)
 export class LoginController {
   constructor(private authenticateUser: NestAuthenticateUserUseCase) {}
@@ -66,17 +73,15 @@ export class LoginController {
   async login(
     @Body(bodyValidationPipe) body: LoginUserBodySchema,
     @Ip() ip: string,
-    @Headers('user-agent') userAgent: string,
   ) {
     const result = await this.authenticateUser.execute({
       email: body.email,
       password: body.password,
       ipAddress: ip,
-      deviceInfo: userAgent,
     });
 
     if (result.isLeft()) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException(result.value.message);
     }
 
     return LoginPresenter.toHttp(result.value);
@@ -150,17 +155,19 @@ export class ZodValidationPipe implements PipeTransform {
    - Use the safeParse method for error handling
    - Return properly formatted responses
 
-3. **Route Constants**:
+3. **Authentication Configuration**:
+   - Use `@ApiBearerAuth()` for Swagger documentation of authentication
+   - Use `@Public()` to mark endpoints that don't require authentication
+   - Note that even public endpoints should include `@ApiBearerAuth()` for consistent API documentation
+
+4. **Route Constants**:
    - Use centralized route constants for URLs
    - Use constants for API documentation
 
-4. **Error Handling**:
+5. **Error Handling**:
    - Check for `isLeft()` to handle domain errors
    - Transform domain errors to appropriate HTTP exceptions
-
-5. **API Documentation**:
-   - Document all endpoints with Swagger annotations
-   - Provide clear descriptions and response schemas
+   - Use error message from domain error
 
 6. **HTTP Status Codes**:
    - Use `@HttpCode()` to set explicit status codes 

@@ -14,13 +14,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    // console.log(exception);
-    // const responseBody: DefaultExceptionBody = {
-    //   statusCode: 500,
-    //   message: 'HTTP Error',
-    //   error: exception.message || 'HTTP Error',
-    // };
-    // response.status(responseBody.statusCode).json(responseBody);
+
     response.status(exception.getStatus()).json(exception.getResponse());
   }
 

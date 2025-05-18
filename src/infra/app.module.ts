@@ -4,13 +4,15 @@ import { envSchema } from './env/env';
 import { EnvModule } from './env/env.module';
 import { HttpModule } from './http/modules/http.module';
 import { HttpLoggingMiddleware } from './middlewares/http-logging.middleware';
-import { ThrottlerModule } from '@nestjs/throttler';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AllExceptionFilter } from './exceptions/all-exception.filter';
 import { PrismaExceptionFilter } from './exceptions/prisma-exception.filter';
 import { PrismaService } from './database/prisma/prisma.service';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { AuthModule } from './auth/auth.module';
 import { CryptographyModule } from './cryptography/cryptography.module';
+import { ROUTES_NEED_PUBLIC_KEY } from '@/core/constants/routes-need-public-key-routes';
+import { VerifyRoutesNeedPublicKeyMiddleware } from './middlewares/verify-routes-need-public-key';
 @Module({
   imports: [
     AuthModule,
@@ -34,6 +36,10 @@ import { CryptographyModule } from './cryptography/cryptography.module';
   controllers: [],
   providers: [
     {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+    {
       provide: APP_FILTER,
       useFactory: () => {
         return new AllExceptionFilter(PrismaService.getInstance());
@@ -51,5 +57,8 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     // Middleware para logging HTTP (deve ser o primeiro para registrar todas as requisições)
     consumer.apply(HttpLoggingMiddleware).forRoutes('{*splat}');
+    consumer
+      .apply(VerifyRoutesNeedPublicKeyMiddleware)
+      .forRoutes(...ROUTES_NEED_PUBLIC_KEY);
   }
 }
