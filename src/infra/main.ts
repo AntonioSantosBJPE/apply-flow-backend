@@ -14,8 +14,8 @@ async function bootstrap() {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   patchNestJsSwagger();
   const config = new DocumentBuilder()
-    .setTitle('Marvinus')
-    .setDescription('Documentação da API do Marvinus')
+    .setTitle('Auth Guard API')
+    .setDescription('Documentação da API do Auth Guard')
     .setVersion('1.0')
     .addBearerAuth()
     .build();

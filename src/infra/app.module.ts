@@ -23,7 +23,7 @@ import { VerifyRoutesNeedPublicKeyMiddleware } from './middlewares/verify-routes
       validate: (env) => envSchema.parse(env),
       isGlobal: true,
     }),
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+
     ThrottlerModule.forRoot({
       throttlers: [
         {
