@@ -9,10 +9,14 @@ import { AllExceptionFilter } from './exceptions/all-exception.filter';
 import { PrismaExceptionFilter } from './exceptions/prisma-exception.filter';
 import { PrismaService } from './database/prisma/prisma.service';
 import { APP_FILTER } from '@nestjs/core';
+import { AuthModule } from './auth/auth.module';
+import { CryptographyModule } from './cryptography/cryptography.module';
 @Module({
   imports: [
+    AuthModule,
     HttpModule,
     EnvModule,
+    CryptographyModule,
     ConfigModule.forRoot({
       validate: (env) => envSchema.parse(env),
       isGlobal: true,
