@@ -83,35 +83,4 @@ export class PrismaUserRepository implements UserRepository {
       where: { id },
     });
   }
-
-  async findByDepartmentId(
-    departmentId: string,
-    params: {
-      page: number;
-      perPage: number;
-    },
-  ): Promise<Pagination<User>> {
-    const paginate = createPaginator({ perPage: params.perPage });
-
-    const paginatedResult = await paginate<PrismaUser, Prisma.UserFindManyArgs>(
-      this.prisma.user,
-      {
-        where: {
-          department_id: departmentId,
-          is_active: true,
-        },
-        orderBy: {
-          created_at: 'desc',
-        },
-      },
-      {
-        page: params.page,
-      },
-    );
-
-    return {
-      data: paginatedResult.data.map((user) => UserMapper.toDomain(user)),
-      meta: paginatedResult.meta,
-    };
-  }
 }

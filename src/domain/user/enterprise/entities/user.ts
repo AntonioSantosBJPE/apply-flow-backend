@@ -7,8 +7,6 @@ export interface UserProps {
   password_hash: string;
   first_name: string;
   last_name: string;
-  department_id: UniqueEntityID;
-  position_id: UniqueEntityID;
   is_active: boolean;
   is_email_verified: boolean;
   last_login?: Date | null;
@@ -54,24 +52,6 @@ export class User extends Entity<UserProps> {
 
   set last_name(value: string) {
     this.props.last_name = value;
-    this.touch();
-  }
-
-  get department_id() {
-    return this.props.department_id;
-  }
-
-  set department_id(value: UniqueEntityID) {
-    this.props.department_id = value;
-    this.touch();
-  }
-
-  get position_id() {
-    return this.props.position_id;
-  }
-
-  set position_id(value: UniqueEntityID) {
-    this.props.position_id = value;
     this.touch();
   }
 

@@ -10,11 +10,4 @@ export abstract class UserRepository {
   abstract create(user: User): Promise<void>;
   abstract save(user: User): Promise<void>;
   abstract delete(id: string): Promise<void>;
-  abstract findByDepartmentId(
-    departmentId: string,
-    params: {
-      page: number;
-      perPage: number;
-    },
-  ): Promise<Pagination<User>>;
 }

@@ -14,14 +14,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// =====================================
+// CORE AUTHENTICATION TABLES
+// =====================================
+
 model User {
   id                String    @id @default(uuid()) @db.Uuid
   email             String    @unique
   password_hash     String    @db.VarChar(255)
   first_name        String    @db.VarChar(255)
   last_name         String    @db.VarChar(255)
-  department_id     String    @db.Uuid
-  position_id       String    @db.Uuid
   is_active         Boolean   @default(true)
   is_email_verified Boolean   @default(false)
   last_login        DateTime?
@@ -30,170 +32,10 @@ model User {
   deleted_at        DateTime?
 
   // Relations
-  department       Department       @relation(fields: [department_id], references: [id])
-  position         Position         @relation(fields: [position_id], references: [id])
-  user_roles       UserRole[]
-  user_permissions UserPermission[]
-  refresh_tokens   RefreshToken[]
-  audit_logs       AuditLog[]
-  owned_resources  Resource[]
-  owned_projects   Project[]
+  refresh_tokens RefreshToken[]
+  audit_logs     AuditLog[]
 
   @@map("users")
-}
-
-model Role {
-  id          String    @id @default(uuid()) @db.Uuid
-  name        String    @unique
-  description String
-  priority    Int
-  is_default  Boolean   @default(false)
-  created_at  DateTime  @default(now())
-  updated_at  DateTime  @updatedAt
-  deleted_at  DateTime?
-
-  // Relations
-  user_roles       UserRole[]
-  role_permissions RolePermission[]
-
-  @@map("roles")
-}
-
-model Department {
-  id          String                 @id @default(uuid()) @db.Uuid
-  name        String                 @unique
-  description String?
-  created_at  DateTime               @default(now())
-  updated_at  DateTime               @updatedAt
-  deleted_at  DateTime?
-  // Relations
-  users       User[]
-  positions   Position[]
-  permissions DepartmentPermission[]
-
-  @@map("departments")
-}
-
-model Position {
-  id            String   @id @default(uuid()) @db.Uuid
-  name          String
-  description   String?
-  department_id String   @db.Uuid
-  created_at    DateTime @default(now())
-  updated_at    DateTime @updatedAt
-
-  // Relations
-  users       User[]
-  department  Department           @relation(fields: [department_id], references: [id])
-  permissions PositionPermission[]
-
-  @@unique([name, department_id])
-  @@map("positions")
-}
-
-model PermissionGroup {
-  id          String       @id @default(uuid()) @db.Uuid
-  name        String       @unique
-  description String?
-  created_at  DateTime     @default(now())
-  updated_at  DateTime     @updatedAt
-  deleted_at  DateTime?
-  // Relations
-  permissions Permission[]
-
-  @@map("permission_groups")
-}
-
-model Permission {
-  id                     String                 @id @default(uuid()) @db.Uuid
-  action                 String
-  resource               String
-  description            String
-  is_route               Boolean                @default(false)
-  group_id               String?                @db.Uuid
-  created_at             DateTime               @default(now())
-  updated_at             DateTime               @updatedAt
-  deleted_at             DateTime?
-  // Relations
-  group                  PermissionGroup?       @relation(fields: [group_id], references: [id])
-  user_permissions       UserPermission[]
-  role_permissions       RolePermission[]
-  department_permissions DepartmentPermission[]
-  position_permissions   PositionPermission[]
-
-  @@unique([action, resource])
-  @@map("permissions")
-}
-
-model DepartmentPermission {
-  id            String     @id @default(uuid()) @db.Uuid
-  department_id String     @db.Uuid
-  permission_id String     @db.Uuid
-  assigned_at   DateTime   @default(now())
-  deleted_at    DateTime?
-  // Relations
-  department    Department @relation(fields: [department_id], references: [id], onDelete: Cascade)
-  permission    Permission @relation(fields: [permission_id], references: [id], onDelete: Cascade)
-
-  @@unique([department_id, permission_id])
-  @@map("department_permissions")
-}
-
-model PositionPermission {
-  id            String     @id @default(uuid()) @db.Uuid
-  position_id   String     @db.Uuid
-  permission_id String     @db.Uuid
-  assigned_at   DateTime   @default(now())
-  deleted_at    DateTime?
-  // Relations
-  position      Position   @relation(fields: [position_id], references: [id], onDelete: Cascade)
-  permission    Permission @relation(fields: [permission_id], references: [id], onDelete: Cascade)
-
-  @@unique([position_id, permission_id])
-  @@map("position_permissions")
-}
-
-model UserRole {
-  id          String    @id @default(uuid()) @db.Uuid
-  user_id     String    @db.Uuid
-  role_id     String    @db.Uuid
-  assigned_at DateTime  @default(now())
-  deleted_at  DateTime?
-  // Relations
-  user        User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  role        Role      @relation(fields: [role_id], references: [id], onDelete: Cascade)
-
-  @@unique([user_id, role_id])
-  @@map("user_roles")
-}
-
-model UserPermission {
-  id            String     @id @default(uuid()) @db.Uuid
-  user_id       String     @db.Uuid
-  permission_id String     @db.Uuid
-  is_allowed    Boolean    @default(true)
-  assigned_at   DateTime   @default(now())
-  deleted_at    DateTime?
-  // Relations
-  user          User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  permission    Permission @relation(fields: [permission_id], references: [id], onDelete: Cascade)
-
-  @@unique([user_id, permission_id])
-  @@map("user_permissions")
-}
-
-model RolePermission {
-  id            String     @id @default(uuid()) @db.Uuid
-  role_id       String     @db.Uuid
-  permission_id String     @db.Uuid
-  assigned_at   DateTime   @default(now())
-  deleted_at    DateTime?
-  // Relations
-  role          Role       @relation(fields: [role_id], references: [id], onDelete: Cascade)
-  permission    Permission @relation(fields: [permission_id], references: [id], onDelete: Cascade)
-
-  @@unique([role_id, permission_id])
-  @@map("role_permissions")
 }
 
 model RefreshToken {
@@ -205,8 +47,9 @@ model RefreshToken {
   expires_at  DateTime
   created_at  DateTime  @default(now())
   deleted_at  DateTime?
+
   // Relations
-  user        User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("refresh_tokens")
 }
@@ -217,57 +60,13 @@ model AuditLog {
   action      String
   resource    String
   resource_id String?
-  details     String?
+  details     Json?     @db.Json
   ip_address  String?
   created_at  DateTime  @default(now())
   deleted_at  DateTime?
+
   // Relations
-  user        User      @relation(fields: [user_id], references: [id])
+  user User @relation(fields: [user_id], references: [id])
 
   @@map("audit_logs")
-}
-
-model Resource {
-  id                String            @id @default(uuid()) @db.Uuid
-  name              String
-  description       String?
-  owner_id          String            @db.Uuid
-  is_public         Boolean           @default(false)
-  created_at        DateTime          @default(now())
-  updated_at        DateTime          @updatedAt
-  deleted_at        DateTime?
-  // Relations
-  owner             User              @relation(fields: [owner_id], references: [id])
-  project_resources ProjectResource[]
-
-  @@map("resources")
-}
-
-model Project {
-  id                String            @id @default(uuid()) @db.Uuid
-  name              String
-  description       String?
-  owner_id          String            @db.Uuid
-  created_at        DateTime          @default(now())
-  updated_at        DateTime          @updatedAt
-  deleted_at        DateTime?
-  // Relations
-  owner             User              @relation(fields: [owner_id], references: [id])
-  project_resources ProjectResource[]
-
-  @@map("projects")
-}
-
-model ProjectResource {
-  id          String    @id @default(uuid()) @db.Uuid
-  project_id  String    @db.Uuid
-  resource_id String    @db.Uuid
-  assigned_at DateTime  @default(now())
-  deleted_at  DateTime?
-  // Relations
-  project     Project   @relation(fields: [project_id], references: [id], onDelete: Cascade)
-  resource    Resource  @relation(fields: [resource_id], references: [id], onDelete: Cascade)
-
-  @@unique([project_id, resource_id])
-  @@map("project_resources")
 }

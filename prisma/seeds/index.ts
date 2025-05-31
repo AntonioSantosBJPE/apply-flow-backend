@@ -1,49 +1,30 @@
 import { PrismaClient } from '../../generated/prisma';
-import { seedPermissionGroups } from './permission-groups';
-import { seedPermissions } from './permissions';
-import { seedDepartments } from './departments';
-import { seedPositions } from './positions';
-import { seedRoles } from './roles';
 import { seedUsers } from './users';
-import { seedUserRoles } from './user-roles';
-import { seedRolePermissions } from './role-permissions';
-import { seedDepartmentPermissions } from './department-permissions';
-import { seedPositionPermissions } from './position-permissions';
-import { seedUserPermissions } from './user-permissions';
 
 const prisma = new PrismaClient();
 
-async function main(): Promise<void> {
+async function main() {
   console.log('🌱 Starting database seeding...');
+  console.log('📋 Seeding basic authentication data only');
 
   try {
-    // Seed basic tables first
-    await seedPermissionGroups(prisma);
-    await seedPermissions(prisma);
-    await seedDepartments(prisma);
-    await seedPositions(prisma);
-    await seedRoles(prisma);
-
-    // Seed users
+    // Seed users for authentication testing
     await seedUsers(prisma);
 
-    // Seed relationships
-    await seedUserRoles(prisma);
-    await seedRolePermissions(prisma);
-    await seedDepartmentPermissions(prisma);
-    await seedPositionPermissions(prisma);
-    await seedUserPermissions(prisma);
-
-    console.log('✅ Database seeding completed successfully');
-  } catch (error: unknown) {
-    console.error(
-      '❌ Database seeding failed:',
-      error instanceof Error ? error.message : String(error),
-    );
-    process.exit(1);
-  } finally {
-    await prisma.$disconnect();
+    console.log('✅ Database seeding completed successfully!');
+    console.log('🔐 Basic authentication system is ready for testing');
+  } catch (error) {
+    console.error('❌ Error during seeding:', error);
+    throw error;
   }
 }
 
-void main();
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
