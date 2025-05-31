@@ -34,9 +34,12 @@ The main `HttpModule` in `src/infra/http/http.module.ts` serves as an aggregator
 @Module({
   imports: [
     DependenciesModule,
-    ClientModule,
-    ClientUserModule,
-    SubscriptionModule,
+    AuthModule,
+    UserModule,
+    ApplicationModule,
+    JobSiteModule,
+    StatusModule,
+    // AnalyticsModule (future),
     // Other domain modules...
   ],
   controllers: [
@@ -136,28 +139,26 @@ export class PresenterExceptionFactory {
 When creating a presenter, follow this pattern:
 
 ```typescript
-import { FindByIdWithPlanClientUserResponse } from '@/domain/client-user/application/repositories/clients-users-repository'
+import { GetApplicationWithJobDetailsResponse } from '@/domain/application/application/repositories/applications-repository'
 import { BasePresenter } from '../base-presenter'
 
-export class ViewClientUserByTokenIdPresenter extends BasePresenter {
-  static toHTTP(clientUser: FindByIdWithPlanClientUserResponse) {
+export class ViewApplicationPresenter extends BasePresenter {
+  static toHTTP(application: GetApplicationWithJobDetailsResponse) {
     return this.safeParse(
-      clientUser,
+      application,
       (data) => ({
         id: data.id,
-        client_id: Number(data.client_id),
-        full_name: data.full_name,
-        email: data.email,
+        job_id: data.job_id,
+        user_id: data.user_id,
         status: data.status,
-        type_authentication: data.type_authentication,
-        plan_name:
-          data.client.subscription && data.client.subscription.length > 0
-            ? data.client.subscription[0].plan_frequency.plan.name
-            : null,
+        applied_at: data.applied_at,
+        company_name: data.job?.company?.name || null,
+        job_title: data.job?.title || null,
+        application_stage: data.application_stage,
         created_at: data.created_at,
         updated_at: data.updated_at,
       }),
-      'ViewClientUserByTokenIdPresenter',
+      'ViewApplicationPresenter',
     )
   }
 }
@@ -202,8 +203,8 @@ Add the route in the `routes.ts` file under the appropriate domain section:
 // src/core/constants/routes.ts
 export const ROUTES = {
   PUBLIC: {
-    CLIENT_PROFILE: {
-      ACCEPT_INVESTOR_PROFILE_CREATION: '/accept-investor-profile-creation',
+    JOB_SITES: {
+      LIST_SITES: '/job-sites',
       // Add your new route here
     },
   },
@@ -222,8 +223,8 @@ import { ROUTES } from './routes'
 export const ROUTES_NEED_PUBLIC_KEY: RouteInfo[] = [
   // Other routes...
   {
-    method: RequestMethod.POST, // Use appropriate method (POST, GET, etc.)
-    path: ROUTES.PUBLIC.CLIENT_PROFILE.ACCEPT_INVESTOR_PROFILE_CREATION,
+    method: RequestMethod.GET, // Use appropriate method (POST, GET, etc.)
+    path: ROUTES.PUBLIC.JOB_SITES.LIST_SITES,
   },
 ]
 ```
@@ -234,66 +235,53 @@ This three-step process ensures the route is properly accessible as a public end
 
 When adding new features, follow this reference to determine which module should contain your controllers and use cases:
 
-### ClientModule
+### AuthModule
 
-- Client entity management
-- Client profiles
-- Client addresses
-- Banking information
-- Client settings
-- Client investor profiles
-
-### ClientUserModule
-
-- Client user authentication
-- Password management
-- User profiles
-- User sessions
-
-### SubscriptionModule
-
-- Subscriptions
-- Plans
-- Payments
-- Billing
-- Contracts
-
-### FleetModule
-
-- Vehicles
-- Fleet management
-- Vehicle maintenance
-- Vehicle assignments
-
-### TaskModule
-
-- Tasks
-- Task assignments
-- Task scheduling
-- Task reporting
-
-### LogErrorModule
-
-- Error logging
-- Error reporting
-- System logs
-
-### PermissionModule
-
-- Roles
-- Permissions
-- Access control
+- User authentication and registration
+- Session management
+- Password management (reset, change)
+- JWT token handling
+- Login/logout functionality
 
 ### UserModule
 
-- System users (not client users)
-- Administrator accounts
-- Staff management
+- Candidate profile management
+- Account settings and preferences
+- Dashboard data aggregation
+- User preferences and customization
+- Account deletion and data export
 
-### PublicModule
+### ApplicationModule
 
-- Public-facing APIs
-- Non-authenticated endpoints
+- Job application creation and management
+- Application status tracking
+- Document uploads (CV, cover letters)
+- Application search and filtering
+- Application analytics and statistics
+
+### JobSiteModule
+
+- Job sites/platforms catalog
+- Global sites list management
+- Site selection for applications
+- Site categorization and search
+- Popular sites tracking
+
+### StatusModule
+
+- Custom status creation and management
+- Status workflow definition
+- Status reordering and customization
+- Default status templates
+- Status color and icon management
+
+### AnalyticsModule (Future)
+
+- Dashboard statistics
+- Trend analysis
+- Performance reports
+- Data visualization
+- Export functionality
 
 ## Code Organization Rules
 
@@ -305,29 +293,29 @@ When adding new features, follow this reference to determine which module should
 4. **Step 4**: Create any necessary presenters in `src/infra/http/presenters/{domain-name}/`
 5. **Step 5**: Register the controller and use case in the appropriate domain module, NOT in the main HttpModule
 
-### Example: Adding a New Client Feature
+### Example: Adding a New Status Feature
 
-If you're adding a feature for creating investor profiles, you would:
+If you're adding a feature for creating custom status, you would:
 
-1. Create `src/domain/client/application/use-cases/create-investor-profile.ts`
-2. Create `src/infra/http/injectable-use-cases/client/nest-create-investor-profile-use-case.ts`
-3. Create `src/infra/http/controllers/client/create-investor-profile.controller.ts`
-4. Create `src/infra/http/presenters/client/create-investor-profile-presenter.ts`
-5. Register in `src/infra/http/http-modules/modules/client.module.ts`:
+1. Create `src/domain/status/application/use-cases/create-custom-status.ts`
+2. Create `src/infra/http/injectable-use-cases/status/nest-create-custom-status-use-case.ts`
+3. Create `src/infra/http/controllers/status/create-custom-status.controller.ts`
+4. Create `src/infra/http/presenters/status/create-custom-status-presenter.ts`
+5. Register in `src/infra/http/http-modules/modules/status.module.ts`:
 
 ```typescript
 @Module({
   imports: [DependenciesModule],
   controllers: [
     // Existing controllers...
-    CreateInvestorProfileController,
+    CreateCustomStatusController,
   ],
   providers: [
     // Existing providers...
-    NestCreateInvestorProfileUseCase,
+    NestCreateCustomStatusUseCase,
   ],
 })
-export class ClientModule {}
+export class StatusModule {}
 ```
 
 ## Common Mistakes to Avoid

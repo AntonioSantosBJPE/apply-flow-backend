@@ -6,7 +6,7 @@ services:
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: 123456
-      POSTGRES_DB: auth-guard
+      POSTGRES_DB: apply-flow
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:

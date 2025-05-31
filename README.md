@@ -1,10 +1,10 @@
-# AuthGuard - Backend
+# ApplyFlow - Backend
 
-Sistema de gerenciamento de autenticação e autorização com foco em permissões granulares para aplicações empresariais, combinando regras RBAC (Role-Based Access Control) e ABAC (Attribute-Based Access Control) de forma dinâmica.
+Sistema backend para candidatos centralizarem e organizarem suas candidaturas de vagas de emprego de diferentes plataformas, com foco em acompanhamento personalizado de status e análise de tendências dos processos seletivos.
 
 ## Visão Geral
 
-Esta API fornece uma solução completa para gerenciamento de usuários, departamentos, cargos, roles e permissões em um ambiente empresarial. Construída com NestJS, TypeScript, Prisma e PostgreSQL, seguindo os princípios de arquitetura limpa e padrões SOLID.
+Esta API fornece uma solução para candidatos organizarem seus processos seletivos de forma centralizada. O sistema permite que candidatos registrem suas candidaturas de diferentes plataformas (LinkedIn, Indeed, Catho, etc.) e acompanhem cada processo com status personalizados. Construída com NestJS, TypeScript, Prisma e PostgreSQL, seguindo os princípios de arquitetura limpa e padrões SOLID.
 
 ## Tecnologias Utilizadas
 
@@ -14,7 +14,7 @@ Esta API fornece uma solução completa para gerenciamento de usuários, departa
 - PostgreSQL
 - Prisma ORM
 - Docker & Docker Compose
-- Jest para testes
+- Vitest para testes
 - JWT para autenticação
 
 ## Checkpoints de Desenvolvimento
@@ -30,76 +30,67 @@ Esta API fornece uma solução completa para gerenciamento de usuários, departa
 ### Checkpoint 2: Configuração do Banco de Dados
 
 - [x] Conectar Prisma ao PostgreSQL
-- [x] Definir esquemas Prisma para entidades base
-- [x] Criar migrações iniciais
-- [x] Implementar seeds para dados iniciais
+- [ ] Definir esquemas Prisma para entidades core
+- [ ] Criar migrações iniciais
+- [ ] Implementar seeds para dados iniciais (sites de vagas)
 - [ ] Configurar ambiente de teste com banco separado
 
-### Checkpoint 3: Módulo de Usuários
+### Checkpoint 3: Módulo de Autenticação
 
 - [x] Implementar Swagger
-- [x] Criar sistema de login com JWT
+- [ ] Criar sistema de login com JWT
 - [ ] Implementar refresh tokens
 - [ ] Implementar registro de usuários
 - [ ] Adicionar recuperação de senha
 - [ ] Implementar gerenciamento de sessões ativas
 
-### Checkpoint 4: Módulo de Departamentos e Cargos
+### Checkpoint 4: Módulo de Usuários
 
-- [ ] Implementar CRUD completo para departamentos
-- [ ] Implementar CRUD completo para cargos
-- [ ] Criar estrutura hierárquica de departamentos
-- [ ] Implementar atribuição de cargos a departamentos
-- [ ] Adicionar validações de departamentos e cargos em endpoints
+- [ ] Implementar perfil do candidato
+- [ ] Configurações de preferências
+- [ ] Dashboard personalizada
+- [ ] Gerenciamento de conta
 
-### Checkpoint 5: Módulo de Roles
+### Checkpoint 5: Módulo Core - Sites de Vagas
 
-- [ ] Implementar CRUD completo para roles
-- [ ] Criar sistema de hierarquia de roles
-- [ ] Implementar atribuição de roles a usuários
-- [ ] Adicionar validações de roles em endpoints
+- [ ] Implementar CRUD para sites de vagas (admin)
+- [ ] Lista global de sites/plataformas pré-cadastradas
+- [ ] Sistema de busca e seleção de sites
+- [ ] Categorização de sites (LinkedIn, Indeed, Catho, etc.)
 
-### Checkpoint 6: Módulo de Permissões
+### Checkpoint 6: Módulo Core - Status Personalizados
 
-- [ ] Implementar CRUD para permissões
-- [ ] Criar CRUD para grupos de permissões
-- [ ] Implementar atribuição de permissões a departamentos
-- [ ] Implementar atribuição de permissões a cargos
-- [ ] Implementar atribuição de permissões a roles
-- [ ] Implementar permissões específicas por usuário
-- [ ] Desenvolver middleware de verificação de permissões
-- [ ] Implementar caching de permissões com Redis
+- [ ] Implementar CRUD de status personalizados por usuário
+- [ ] Status padrão do sistema
+- [ ] Reordenação de status (workflow)
+- [ ] Cores e ícones para status
 
-### Checkpoint 7: Sistema de Autorização
+### Checkpoint 7: Módulo Core - Candidaturas
 
-- [ ] Implementar middleware de autorização
-- [ ] Criar serviço de verificação de permissões
-- [ ] Implementar lógica de herança de permissões (departamento > cargo > usuário)
-- [ ] Criar guardas para proteção de rotas
-- [ ] Implementar verificação de permissões em decorators
+- [ ] Implementar CRUD completo para candidaturas
+- [ ] Seleção de site de vaga na criação
+- [ ] Atribuição de status personalizados
+- [ ] Campos essenciais: título da vaga, empresa, link, observações
+- [ ] Upload de currículo utilizado
+- [ ] Sistema de busca e filtros
 
-### Checkpoint 8: Módulos de Demonstração
+### Checkpoint 8: Dashboard e Visualizações
 
-- [ ] Criar módulo de "Recursos" com CRUD completo
-- [ ] Implementar módulo de "Projetos" com CRUD
-- [ ] Aplicar verificações de permissão em operações
-- [ ] Criar relacionamentos entre entidades
+- [ ] Dashboard com visão geral das candidaturas
+- [ ] Gráficos de status ao longo do tempo
+- [ ] Estatísticas por site de vaga
+- [ ] Timeline de atividades
+- [ ] Relatórios básicos
 
-### Checkpoint 9: Frontend de Administração
+### Checkpoint 9: Recursos Avançados (Futuro)
 
-- [ ] Criar interface de gerenciamento de departamentos
-- [ ] Criar interface de gerenciamento de cargos
-- [ ] Implementar interface de atribuição de permissões
-- [ ] Desenvolver visualizador de permissões por usuário
+- [ ] Sistema de notificações e lembretes
+- [ ] Exportação de dados
+- [ ] Análise de tendências
+- [ ] Integração com calendário
+- [ ] Backup de dados
 
-### Checkpoint 10: Sistemas de Logs e Auditoria
-
-- [ ] Implementar logs detalhados de atividades
-- [ ] Criar endpoint para consulta de logs
-- [ ] Adicionar sistema de filtragem e busca em logs
-- [ ] Implementar exportação de logs
-
-### Checkpoint 11: Otimização e Segurança
+### Checkpoint 10: Otimização e Segurança
 
 - [ ] Adicionar CORS
 - [ ] Implementar rate limiting
@@ -108,14 +99,14 @@ Esta API fornece uma solução completa para gerenciamento de usuários, departa
 - [ ] Otimizar queries do banco de dados
 - [ ] Implementar testes automatizados
 
-### Checkpoint 12: Documentação
+### Checkpoint 11: Documentação
 
 - [ ] Configurar Swagger para documentação da API
 - [ ] Documentar todas as rotas e payloads
 - [ ] Criar descrições para todas as entidades
-- [ ] Documentar fluxos de autenticação e autorização
+- [ ] Documentar fluxos de autenticação
 
-### Checkpoint 13: Deploy
+### Checkpoint 12: Deploy
 
 - [ ] Configurar Husky
 - [ ] Configurar Git actions
@@ -137,13 +128,11 @@ src/
 │   └── either.ts        # Implementação do padrão Either
 ├── domain/              # Camada de domínio
 │   ├── auth/            # Domínio de autenticação
-│   ├── user/            # Domínio de usuários
-│   ├── department/      # Domínio de departamentos
-│   ├── position/        # Domínio de cargos
-│   ├── role/            # Domínio de roles
-│   ├── permission/      # Domínio de permissões
-│   ├── resource/        # Recursos (demonstração)
-│   └── project/         # Projetos (demonstração)
+│   ├── user/            # Domínio de usuários/candidatos
+│   ├── application/     # Domínio de candidaturas
+│   ├── job-site/        # Domínio de sites de vagas
+│   ├── status/          # Domínio de status personalizados
+│   └── analytics/       # Domínio de analytics (futuro)
 ├── infra/               # Camada de infraestrutura
 │   ├── http/            # Controllers e rotas HTTP
 │   │   ├── controllers/ # Controllers organizados por domínio
@@ -189,78 +178,52 @@ $ npx prisma generate
 
 ### Autenticação
 
-- `POST /auth/register` - Registro de novo usuário
-- `POST /auth/login` - Login de usuário
+- `POST /auth/register` - Registro de novo candidato
+- `POST /auth/login` - Login de candidato
 - `POST /auth/refresh-token` - Atualizar token de acesso
 - `POST /auth/forgot-password` - Solicitar redefinição de senha
 - `POST /auth/reset-password` - Redefinir senha
 - `GET /auth/sessions` - Listar sessões ativas
 - `DELETE /auth/sessions/:id` - Encerrar sessão específica
 
-### Usuários
+### Perfil do Candidato
 
-- `GET /users` - Listar usuários
-- `GET /users/:id` - Obter usuário específico
-- `PATCH /users/:id` - Atualizar usuário
-- `DELETE /users/:id` - Desativar usuário
-- `GET /users/:id/roles` - Listar roles do usuário
-- `GET /users/:id/permissions` - Listar permissões do usuário
+- `GET /profile` - Obter perfil do candidato
+- `PATCH /profile` - Atualizar perfil do candidato
+- `DELETE /account` - Excluir conta
+- `GET /dashboard` - Dashboard personalizada
 
-### Departamentos
+### Sites de Vagas
 
-- `GET /departments` - Listar departamentos
-- `POST /departments` - Criar novo departamento
-- `GET /departments/:id` - Obter departamento específico
-- `PATCH /departments/:id` - Atualizar departamento
-- `DELETE /departments/:id` - Remover departamento
-- `GET /departments/:id/permissions` - Listar permissões do departamento
-- `POST /departments/:id/permissions` - Atribuir permissão ao departamento
+- `GET /job-sites` - Listar sites de vagas disponíveis
+- `GET /job-sites/search` - Buscar sites por nome
 
-### Cargos
+### Status Personalizados
 
-- `GET /positions` - Listar cargos
-- `POST /positions` - Criar novo cargo
-- `GET /positions/:id` - Obter cargo específico
-- `PATCH /positions/:id` - Atualizar cargo
-- `DELETE /positions/:id` - Remover cargo
-- `GET /positions/:id/permissions` - Listar permissões do cargo
-- `POST /positions/:id/permissions` - Atribuir permissão ao cargo
+- `GET /status` - Listar status do candidato
+- `POST /status` - Criar novo status personalizado
+- `PATCH /status/:id` - Atualizar status
+- `DELETE /status/:id` - Remover status
+- `PATCH /status/reorder` - Reordenar status
 
-### Roles
+### Candidaturas
 
-- `GET /roles` - Listar roles
-- `POST /roles` - Criar nova role
-- `GET /roles/:id` - Obter role específica
-- `PATCH /roles/:id` - Atualizar role
-- `DELETE /roles/:id` - Remover role
-- `POST /roles/:id/permissions` - Atribuir permissão a role
-- `DELETE /roles/:id/permissions/:permissionId` - Remover permissão de role
+- `GET /applications` - Listar candidaturas
+- `POST /applications` - Criar nova candidatura
+- `GET /applications/:id` - Obter candidatura específica
+- `PATCH /applications/:id` - Atualizar candidatura
+- `DELETE /applications/:id` - Remover candidatura
+- `PATCH /applications/:id/status` - Atualizar status da candidatura
+- `POST /applications/:id/documents` - Adicionar documentos
+- `GET /applications/stats` - Estatísticas de candidaturas
 
-### Permissões
+### Dashboard e Analytics
 
-- `GET /permissions` - Listar permissões
-- `POST /permissions` - Criar nova permissão
-- `GET /permissions/:id` - Obter permissão específica
-- `PATCH /permissions/:id` - Atualizar permissão
-- `DELETE /permissions/:id` - Remover permissão
-- `GET /permission-groups` - Listar grupos de permissões
-- `POST /permission-groups` - Criar novo grupo de permissões
-
-### Recursos (demonstração)
-
-- `GET /resources` - Listar recursos
-- `POST /resources` - Criar novo recurso
-- `GET /resources/:id` - Obter recurso específico
-- `PATCH /resources/:id` - Atualizar recurso
-- `DELETE /resources/:id` - Remover recurso
-
-### Projetos (demonstração)
-
-- `GET /projects` - Listar projetos
-- `POST /projects` - Criar novo projeto
-- `GET /projects/:id` - Obter projeto específico
-- `PATCH /projects/:id` - Atualizar projeto
-- `DELETE /projects/:id` - Remover projeto
+- `GET /dashboard/overview` - Visão geral das candidaturas
+- `GET /dashboard/charts` - Dados para gráficos
+- `GET /analytics/trends` - Análise de tendências
+- `GET /analytics/by-site` - Estatísticas por site
+- `GET /analytics/timeline` - Timeline de atividades
 
 ## Próximos Passos
 

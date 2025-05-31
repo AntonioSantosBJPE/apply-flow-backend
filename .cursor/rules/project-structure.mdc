@@ -47,7 +47,7 @@ The infrastructure layer includes:
 
 The application uses a modular approach based on domains:
 - The `http/http-modules/modules/` directory contains domain-specific modules
-- Each module (like `ClientModule`, `SubscriptionModule`) should contain related controllers and use cases
+- Each module (like `AuthModule`, `UserModule`, `ApplicationModule`, `JobSiteModule`, `StatusModule`) should contain related controllers and use cases
 - Domain-specific controllers and use cases must be registered in their respective domain module
 - The main `HttpModule` imports all domain modules and only contains app-wide components
 

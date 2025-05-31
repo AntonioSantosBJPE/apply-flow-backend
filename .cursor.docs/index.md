@@ -1,6 +1,6 @@
-# Marvinus Backend Development Guidelines
+# ApplyFlow Backend Development Guidelines
 
-Welcome to the Marvinus Backend development guidelines. This documentation provides important rules and best practices to ensure that all code follows the project's architecture and coding standards.
+Welcome to the ApplyFlow Backend development guidelines. This documentation provides important rules and best practices to ensure that all code follows the project's architecture and coding standards.
 
 ## Table of Contents
 
@@ -14,16 +14,13 @@ Welcome to the Marvinus Backend development guidelines. This documentation provi
 ### Module Assignment Reference
 
 Here's a quick reference for which module should contain specific controllers and use cases:
-<!-- 
-- **ClientModule**: Client entity, profiles, addresses, banking, settings, investor profiles
-- **ClientUserModule**: Client user authentication, passwords, profiles, sessions
-- **SubscriptionModule**: Subscriptions, plans, payments, billing, contracts
-- **FleetModule**: Vehicles, fleet management, maintenance, assignments
-- **TaskModule**: Tasks, assignments, scheduling, reporting
-- **LogErrorModule**: Error logging, reporting, system logs
-- **PermissionModule**: Roles, permissions, access control
-- **UserModule**: System users (not client users), admin accounts
-- **PublicModule**: Public-facing APIs, non-authenticated endpoints -->
+
+- **AuthModule**: User authentication, sessions, password management, JWT tokens
+- **UserModule**: Candidate profiles, account management, preferences, dashboard
+- **ApplicationModule**: Job applications, application tracking, document uploads, search and filtering
+- **JobSiteModule**: Job sites/platforms management, global sites list, site selection
+- **StatusModule**: Custom status management, status workflows, user-defined status categories
+- **AnalyticsModule**: Dashboard data, statistics, trends analysis, reporting (future)
 
 ### Presenter Pattern
 

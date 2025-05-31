@@ -7,15 +7,12 @@
 - All domain-specific controllers and use cases must be registered in their corresponding module in `src/infra/http/http-modules/modules/` rather than directly in the main `HttpModule`.
 - The main `HttpModule` should only contain app-wide controllers and providers or those that don't fit into any specific domain module.
 - Follow these domain module assignments:
-  <!-- - `ClientModule`: All client, client profile, client address, and client bank related controllers and use cases
-  - `ClientUserModule`: All client user authentication and user management related controllers and use cases
-  - `SubscriptionModule`: All subscription, billing, and payment related controllers and use cases
-  - `FleetModule`: All fleet and vehicle related controllers and use cases
-  - `TaskModule`: All task related controllers and use cases
-  - `LogErrorModule`: All error logging related controllers and use cases
-  - `PermissionModule`: All permission and role related controllers and use cases
-  - `UserModule`: All system user (not client user) related controllers and use cases
-  - `PublicModule`: All public-facing API controllers and use cases -->
+  - `AuthModule`: All user authentication, sessions, password management, and JWT token related controllers and use cases
+  - `UserModule`: All candidate profiles, account management, preferences, and dashboard related controllers and use cases
+  - `ApplicationModule`: All job applications, application tracking, document uploads, search and filtering related controllers and use cases
+  - `JobSiteModule`: All job sites/platforms management, global sites list, and site selection related controllers and use cases
+  - `StatusModule`: All custom status management, status workflows, and user-defined status categories related controllers and use cases
+  - `AnalyticsModule`: All dashboard data, statistics, trends analysis, and reporting related controllers and use cases (future feature)
 
 ### Import Organization
 
@@ -82,7 +79,7 @@ export class LoginController {
 Example presenter implementation:
 
 ```typescript
-import { FindByIdWithPlanClientUserResponse } from '@/domain/client-user/application/repositories/clients-users-repository'
+import { GetApplicationWithJobDetailsResponse } from '@/domain/application/application/repositories/applications-repository'
 import { BasePresenter } from '../base-presenter'
 
 type LoginPresenterPayload = {
@@ -122,8 +119,8 @@ When creating public endpoints, you must configure them in two places:
    export const ROUTES = {
      PUBLIC: {
        // Example: Add your route in the appropriate domain section
-       CLIENT_PROFILE: {
-         ACCEPT_INVESTOR_PROFILE_CREATION: '/accept-investor-profile-creation',
+       APPLICATIONS: {
+         SHARE_APPLICATION: '/share-application',
        },
      },
    }
@@ -135,7 +132,7 @@ When creating public endpoints, you must configure them in two places:
      // Add your public route
      {
        method: RequestMethod.POST, // Use appropriate HTTP method
-       path: ROUTES.PUBLIC.CLIENT_PROFILE.ACCEPT_INVESTOR_PROFILE_CREATION,
+       path: ROUTES.PUBLIC.APPLICATIONS.SHARE_APPLICATION,
      },
    ]
    ```

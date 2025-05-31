@@ -5,7 +5,7 @@ alwaysApply: true
 ---
 # Project Overview
 
-This is AuthGuard Backend, a NestJS application using a domain-driven design architecture. The application serves as a backend service with several domain modules and infrastructure components.
+This is ApplyFlow Backend, a NestJS application using a domain-driven design architecture. The application serves as a backend service for a comprehensive job application management system with several domain modules and infrastructure components.
 
 ## Main Entry Point
 
@@ -24,7 +24,14 @@ The application's entry point is [infra/main.ts](mdc:src/infra/main.ts), which b
 ## Domain Modules
 
 Key domain modules include:
-- Auth
+- Application: Job application management and tracking
+- Company: Company profiles and information
+- Job: Job posting management and search
+- Networking: Contact and professional relationship management
+- Notification: Alerts and reminder system
+- Analytics: Statistics and performance tracking
+- Auth: User authentication and security
+- User: User profiles and account management
 
 ## Infrastructure Components
 

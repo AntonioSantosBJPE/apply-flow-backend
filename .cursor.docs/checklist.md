@@ -20,15 +20,12 @@ Use this checklist before committing changes to ensure that all components are p
 
 Have you registered your components in the correct domain module?
 
-<!-- - **ClientModule**: For client entity, profiles, addresses, banking, settings
-- **ClientUserModule**: For client user authentication, passwords, user profiles
-- **SubscriptionModule**: For subscriptions, plans, payments, billing
-- **FleetModule**: For vehicles, fleet management
-- **TaskModule**: For tasks, assignments, scheduling
-- **LogErrorModule**: For error logging and reporting
-- **PermissionModule**: For roles and permissions
-- **UserModule**: For system users (not client users)
-- **PublicModule**: For public-facing APIs, non-authenticated endpoints -->
+- **AuthModule**: For user authentication, sessions, password management, JWT tokens
+- **UserModule**: For candidate profiles, account management, preferences, dashboard
+- **ApplicationModule**: For job applications, application tracking, document uploads, search and filtering
+- **JobSiteModule**: For job sites/platforms management, global sites list, site selection
+- **StatusModule**: For custom status management, status workflows, user-defined status categories
+- **AnalyticsModule**: For dashboard data, statistics, trends analysis, reporting (future feature)
 
 ## 4. Module Architecture Integrity ✓
 
@@ -66,8 +63,8 @@ Example in `routes.ts`:
 
 ```typescript
 PUBLIC: {
-  CLIENT_PROFILE: {
-    ACCEPT_INVESTOR_PROFILE_CREATION: '/accept-investor-profile-creation',
+  JOB_SITES: {
+    LIST_SITES: '/job-sites',
   },
 }
 ```
@@ -76,8 +73,8 @@ Example in `routes-need-public-key-routes.ts`:
 
 ```typescript
 {
-  method: RequestMethod.POST,
-  path: ROUTES.PUBLIC.CLIENT_PROFILE.ACCEPT_INVESTOR_PROFILE_CREATION,
+  method: RequestMethod.GET,
+  path: ROUTES.PUBLIC.JOB_SITES.LIST_SITES,
 }
 ```
 
