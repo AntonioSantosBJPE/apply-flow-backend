@@ -30,15 +30,15 @@ Esta API fornece uma solução para candidatos organizarem seus processos seleti
 ### Checkpoint 2: Configuração do Banco de Dados
 
 - [x] Conectar Prisma ao PostgreSQL
-- [ ] Definir esquemas Prisma para entidades core
-- [ ] Criar migrações iniciais
-- [ ] Implementar seeds para dados iniciais (sites de vagas)
-- [ ] Configurar ambiente de teste com banco separado
+- [x] Definir esquemas Prisma para entidades core
+- [x] Criar migrações iniciais
+- [x] Implementar seeds para dados iniciais (sites de vagas)
+- [x] Configurar ambiente de teste com banco separado
 
 ### Checkpoint 3: Módulo de Autenticação
 
 - [x] Implementar Swagger
-- [ ] Criar sistema de login com JWT
+- [x] Criar sistema de login com JWT
 - [ ] Implementar refresh tokens
 - [ ] Implementar registro de usuários
 - [ ] Adicionar recuperação de senha
